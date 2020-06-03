@@ -40,7 +40,8 @@ add_library (${MODULE} ${LIBRARY_TYPE}
     ${PCH}
     ${MODULARITY_SRC}
     ${CMAKE_CURRENT_LIST_DIR}/log.h
-    ${CMAKE_CURRENT_LIST_DIR}/dummy.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dataformatter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dataformatter.h
 )
 
 if (NOT MSVC)
