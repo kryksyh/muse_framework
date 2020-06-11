@@ -16,25 +16,22 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_FRAMEWORK_IINTERACTIVE_H
-#define MU_FRAMEWORK_IINTERACTIVE_H
+#ifndef MU_FRAMEWORK_VERSION_H
+#define MU_FRAMEWORK_VERSION_H
 
-#include <QString>
-
-#include "modularity/imoduleexport.h"
+#include <string>
 
 namespace mu {
 namespace framework {
-class IInteractive : MODULE_EXPORT_INTERFACE
+class Version
 {
-    INTERFACE_ID(IInteractive)
-
 public:
-    virtual ~IInteractive() = default;
 
-    virtual QString selectOpeningFile(const QString& title, const QString& dir, const QString& filter) = 0;
+    static bool unstable();
+    static std::string fullVersion();  // e.g. 3.4.0-Beta
+
 };
 }
 }
 
-#endif // MU_FRAMEWORK_IINTERACTIVE_H
+#endif // MU_FRAMEWORK_VERSION_H
