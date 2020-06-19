@@ -16,21 +16,21 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#include "actionsmodule.h"
+#ifndef MU_ACTIONS_IMODULEACTIONS_H
+#define MU_ACTIONS_IMODULEACTIONS_H
 
-#include "modularity/ioc.h"
-#include "internal/actionsdispatcher.h"
-#include "internal/actionsregister.h"
+#include "actiontypes.h"
 
-using namespace mu::actions;
-
-std::string ActionsModule::moduleName() const
+namespace mu {
+namespace actions {
+class IModuleActions
 {
-    return "actions";
+public:
+    virtual ~IModuleActions() = default;
+
+    virtual const Action& action(const ActionName& name) const = 0;
+};
+}
 }
 
-void ActionsModule::registerExports()
-{
-    framework::ioc()->registerExport<IActionsDispatcher>("actions", new ActionsDispatcher());
-    framework::ioc()->registerExport<IActionsRegister>("actions", new ActionsRegister());
-}
+#endif // MU_ACTIONS_IMODULEACTIONS_H
