@@ -16,35 +16,39 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_ACTIONS_ACTIONABLE_H
-#define MU_ACTIONS_ACTIONABLE_H
+#ifndef MU_FRAMEWORK_RETVAL_H
+#define MU_FRAMEWORK_RETVAL_H
 
-#include "iactionsdispatcher.h"
+#include "ret.h"
+#include "async/channel.h"
 
 namespace mu {
-namespace actions {
-class Actionable
-{
-public:
-    virtual ~Actionable()
-    {
-        if (m_dispatcher) {
-            m_dispatcher->unReg(this);
-        }
-    }
+template <typename T>
+struct RetVal {
+    Ret ret;
+    T val;
+};
 
-    virtual bool canReceiveAction(const ActionName&) const { return true; }
+template <typename T1, typename T2>
+struct RetVal2 {
+    Ret ret;
+    T1 val1;
+    T2 val2;
+};
 
-    inline void setDispatcher(IActionsDispatcher* dispatcher)
-    {
-        m_dispatcher = dispatcher;
-    }
+template <typename T>
+struct RetValCh {
+    Ret ret;
+    T val;
+    async::Channel<T> ch;
+};
 
-private:
-
-    IActionsDispatcher* m_dispatcher = nullptr;
+template <typename T>
+struct RetCh {
+    Ret ret;
+    async::Channel<T> ch;
 };
 }
-}
 
-#endif // MU_ACTIONS_ACTIONABLE_H
+
+#endif // MU_FRAMEWORK_RETVAL_H
