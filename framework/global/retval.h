@@ -16,22 +16,39 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_FRAMEWORK_UIINTERACTIVE_H
-#define MU_FRAMEWORK_UIINTERACTIVE_H
+#ifndef MU_FRAMEWORK_RETVAL_H
+#define MU_FRAMEWORK_RETVAL_H
 
-#include "iinteractive.h"
+#include "ret.h"
+#include "async/channel.h"
 
 namespace mu {
-namespace framework {
-class UiInteractive : public IInteractive
-{
-public:
+template <typename T>
+struct RetVal {
+    Ret ret;
+    T val;
+};
 
-    UiInteractive() = default;
+template <typename T1, typename T2>
+struct RetVal2 {
+    Ret ret;
+    T1 val1;
+    T2 val2;
+};
 
-    io::path selectOpeningFile(const std::string& title, const std::string& dir, const std::string& filter) override;
+template <typename T>
+struct RetValCh {
+    Ret ret;
+    T val;
+    async::Channel<T> ch;
+};
+
+template <typename T>
+struct RetCh {
+    Ret ret;
+    async::Channel<T> ch;
 };
 }
-}
 
-#endif // MU_FRAMEWORK_UIINTERACTIVE_H
+
+#endif // MU_FRAMEWORK_RETVAL_H

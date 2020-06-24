@@ -16,22 +16,50 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_FRAMEWORK_UIINTERACTIVE_H
-#define MU_FRAMEWORK_UIINTERACTIVE_H
 
-#include "iinteractive.h"
+#include "ret.h"
 
-namespace mu {
-namespace framework {
-class UiInteractive : public IInteractive
+using namespace mu;
+
+Ret::Ret(int c)
+    : m_code(c)
+{}
+
+Ret::Ret(const int& c, const std::string& text)
+    : m_code(c), m_text(text)
+{}
+
+bool Ret::valid() const
 {
-public:
-
-    UiInteractive() = default;
-
-    io::path selectOpeningFile(const std::string& title, const std::string& dir, const std::string& filter) override;
-};
-}
+    return m_code > int(Code::Undefined);
 }
 
-#endif // MU_FRAMEWORK_UIINTERACTIVE_H
+bool Ret::success() const
+{
+    return m_code == int(Code::Ok);
+}
+
+void Ret::setCode(int c)
+{
+    m_code = c;
+}
+
+int Ret::code() const
+{
+    return m_code;
+}
+
+void Ret::setText(const std::string& s)
+{
+    m_text = s;
+}
+
+const std::string& Ret::text() const
+{
+    return m_text;
+}
+
+std::string Ret::toString() const
+{
+    return "[" + std::to_string(m_code) + "] " + m_text;
+}
