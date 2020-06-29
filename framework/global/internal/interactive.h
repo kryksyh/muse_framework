@@ -16,24 +16,22 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#include "globalmodule.h"
+#ifndef MU_FRAMEWORK_INTERACTIVE_H
+#define MU_FRAMEWORK_INTERACTIVE_H
 
-#include "modularity/ioc.h"
-#include "internal/globalconfiguration.h"
+#include "iinteractive.h"
 
-#include "internal/interactive.h"
-#include "internal/launcher.h"
-
-using namespace mu::framework;
-
-std::string GlobalModule::moduleName() const
+namespace mu {
+namespace framework {
+class Interactive : public IInteractive
 {
-    return "global";
+public:
+
+    Interactive() = default;
+
+    io::path selectOpeningFile(const std::string& title, const std::string& dir, const std::string& filter) override;
+};
+}
 }
 
-void GlobalModule::registerExports()
-{
-    ioc()->registerExport<IGlobalConfiguration>(moduleName(), new GlobalConfiguration());
-    ioc()->registerExport<IInteractive>(moduleName(), new Interactive());
-    ioc()->registerExport<ILauncher>(moduleName(), new Launcher());
-}
+#endif // MU_FRAMEWORK_UIINTERACTIVE_H

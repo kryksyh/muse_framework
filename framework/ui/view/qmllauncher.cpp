@@ -16,24 +16,16 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#include "globalmodule.h"
-
-#include "modularity/ioc.h"
-#include "internal/globalconfiguration.h"
-
-#include "internal/interactive.h"
-#include "internal/launcher.h"
+#include "qmllauncher.h"
 
 using namespace mu::framework;
 
-std::string GlobalModule::moduleName() const
+QmlLauncher::QmlLauncher(QObject* parent)
+    : QObject(parent)
 {
-    return "global";
 }
 
-void GlobalModule::registerExports()
+void QmlLauncher::open(const QString& uri)
 {
-    ioc()->registerExport<IGlobalConfiguration>(moduleName(), new GlobalConfiguration());
-    ioc()->registerExport<IInteractive>(moduleName(), new Interactive());
-    ioc()->registerExport<ILauncher>(moduleName(), new Launcher());
+    launcher()->open(UriQuery(uri.toStdString()));
 }

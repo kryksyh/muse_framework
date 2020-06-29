@@ -16,24 +16,32 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#include "globalmodule.h"
+#ifndef MU_FRAMEWORK_UIERRORS_H
+#define MU_FRAMEWORK_UIERRORS_H
 
-#include "modularity/ioc.h"
-#include "internal/globalconfiguration.h"
+#include "ret.h"
 
-#include "internal/interactive.h"
-#include "internal/launcher.h"
+namespace mu {
+namespace framework {
+namespace ui {
 
-using namespace mu::framework;
+// 100 - 199
+enum class Err {
+    Undefined       = int(Ret::Code::Undefined),
+    NoError         = int(Ret::Code::Ok),
 
-std::string GlobalModule::moduleName() const
+    ResolveFailed   = 101,
+    CreateFailed    = 102
+
+};
+
+inline mu::Ret make_ret(Err e)
 {
-    return "global";
+    return Ret(static_cast<int>(e));
 }
 
-void GlobalModule::registerExports()
-{
-    ioc()->registerExport<IGlobalConfiguration>(moduleName(), new GlobalConfiguration());
-    ioc()->registerExport<IInteractive>(moduleName(), new Interactive());
-    ioc()->registerExport<ILauncher>(moduleName(), new Launcher());
 }
+}
+}
+
+#endif // MU_FRAMEWORK_UIERRORS_H

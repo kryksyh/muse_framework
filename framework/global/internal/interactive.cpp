@@ -16,24 +16,20 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#include "globalmodule.h"
+#include "interactive.h"
 
-#include "modularity/ioc.h"
-#include "internal/globalconfiguration.h"
-
-#include "internal/interactive.h"
-#include "internal/launcher.h"
+#include <QFileDialog>
+#include "io/filepath.h"
 
 using namespace mu::framework;
 
-std::string GlobalModule::moduleName() const
+mu::io::path Interactive::selectOpeningFile(const std::string& title,
+                                              const std::string& dir,
+                                              const std::string& filter)
 {
-    return "global";
-}
-
-void GlobalModule::registerExports()
-{
-    ioc()->registerExport<IGlobalConfiguration>(moduleName(), new GlobalConfiguration());
-    ioc()->registerExport<IInteractive>(moduleName(), new Interactive());
-    ioc()->registerExport<ILauncher>(moduleName(), new Launcher());
+    QString path = QFileDialog::getOpenFileName(nullptr, /*parent*/
+                                                QString::fromStdString(title),
+                                                QString::fromStdString(dir),
+                                                QString::fromStdString(filter));
+    return io::pathFromQString(path);
 }

@@ -16,24 +16,25 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#include "globalmodule.h"
+#ifndef MU_FRAMEWORK_IQMLLAUNCHPROVIDER_H
+#define MU_FRAMEWORK_IQMLLAUNCHPROVIDER_H
 
-#include "modularity/ioc.h"
-#include "internal/globalconfiguration.h"
+#include "modularity/imoduleexport.h"
+#include "uri.h"
+#include "retval.h"
 
-#include "internal/interactive.h"
-#include "internal/launcher.h"
-
-using namespace mu::framework;
-
-std::string GlobalModule::moduleName() const
+namespace mu {
+namespace framework {
+class IQmlLaunchProvider : MODULE_EXPORT_INTERFACE
 {
-    return "global";
+    INTERFACE_ID(IQmlLaunchProvider)
+public:
+    virtual ~IQmlLaunchProvider() = default;
+
+    virtual RetVal<Val> open(const UriQuery& uri) = 0;
+    virtual ValCh<Uri> currentUri() const = 0;
+};
+}
 }
 
-void GlobalModule::registerExports()
-{
-    ioc()->registerExport<IGlobalConfiguration>(moduleName(), new GlobalConfiguration());
-    ioc()->registerExport<IInteractive>(moduleName(), new Interactive());
-    ioc()->registerExport<ILauncher>(moduleName(), new Launcher());
-}
+#endif // MU_FRAMEWORK_IQMLLAUNCHPROVIDER_H

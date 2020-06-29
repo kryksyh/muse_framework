@@ -16,24 +16,43 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#include "globalmodule.h"
+#ifndef MU_FRAMEWORK_LAUNCHERTESTSMODEL_H
+#define MU_FRAMEWORK_LAUNCHERTESTSMODEL_H
+
+#include <QObject>
 
 #include "modularity/ioc.h"
-#include "internal/globalconfiguration.h"
+#include "ilauncher.h"
+#include "async/asyncable.h"
 
-#include "internal/interactive.h"
-#include "internal/launcher.h"
-
-using namespace mu::framework;
-
-std::string GlobalModule::moduleName() const
+namespace mu {
+namespace framework {
+class LauncherTestsModel : public QObject, async::Asyncable
 {
-    return "global";
+    Q_OBJECT
+
+    INJECT(ui, ILauncher, launcher)
+
+    Q_PROPERTY(QString currentUri READ currentUri NOTIFY currentUriChanged)
+
+public:
+    explicit LauncherTestsModel(QObject* parent = nullptr);
+
+    QString currentUri() const;
+
+    Q_INVOKABLE void openSampleDialog();
+    Q_INVOKABLE void openSampleDialogSync();
+
+signals:
+    void currentUriChanged(QString currentUri);
+
+private:
+
+    void setCurrentUri(const Uri& uri);
+
+    QString m_currentUri;
+};
+}
 }
 
-void GlobalModule::registerExports()
-{
-    ioc()->registerExport<IGlobalConfiguration>(moduleName(), new GlobalConfiguration());
-    ioc()->registerExport<IInteractive>(moduleName(), new Interactive());
-    ioc()->registerExport<ILauncher>(moduleName(), new Launcher());
-}
+#endif // MU_FRAMEWORK_LAUNCHERTESTSMODEL_H
