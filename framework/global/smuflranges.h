@@ -16,26 +16,18 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_IO_PATH_H
-#define MU_IO_PATH_H
+#ifndef SMUFLRANGES_H
+#define SMUFLRANGES_H
 
-#include <string>
+#include <QMap>
 #include <QString>
+#include <QStringList>
 
+//! NOTE temporary place for this method
 namespace mu {
-namespace io {
-using path = std::string;
 
-#ifndef NO_QT_SUPPORT
-path pathFromQString(const QString& s);
-QString pathToQString(const path& p);
-#endif
-
-path syffix(const path& path);
-std::string basename(const path& path);
-
-QString escapeFileName(QString fn);
-}
+extern QMap<QString, QStringList>* smuflRanges();
+constexpr const char* SMUFL_ALL_SYMBOLS = "All symbols";
 }
 
-#endif // MU_IO_PATH_H
+#endif // SMUFLRANGES_H

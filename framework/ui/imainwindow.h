@@ -16,26 +16,26 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_IO_PATH_H
-#define MU_IO_PATH_H
+#ifndef MU_FRAMEWORK_IMAINWINDOW_H
+#define MU_FRAMEWORK_IMAINWINDOW_H
 
-#include <string>
-#include <QString>
+#include "modularity/imoduleexport.h"
+
+class QMainWindow;
+class QWidget;
 
 namespace mu {
-namespace io {
-using path = std::string;
+namespace framework {
+class IMainWindow : MODULE_EXPORT_INTERFACE
+{
+    INTERFACE_ID(IMainWindow)
+public:
+    virtual ~IMainWindow() = default;
 
-#ifndef NO_QT_SUPPORT
-path pathFromQString(const QString& s);
-QString pathToQString(const path& p);
-#endif
-
-path syffix(const path& path);
-std::string basename(const path& path);
-
-QString escapeFileName(QString fn);
+    virtual QMainWindow* qMainWindow() = 0;
+    virtual void stackUnder(QWidget*) = 0;
+};
 }
 }
 
-#endif // MU_IO_PATH_H
+#endif // MU_FRAMEWORK_IMAINWINDOW_H

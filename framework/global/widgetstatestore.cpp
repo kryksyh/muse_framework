@@ -16,26 +16,29 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_IO_PATH_H
-#define MU_IO_PATH_H
+#include "widgetstatestore.h"
 
-#include <string>
-#include <QString>
+#include <QWidget>
+#include <QSettings>
 
-namespace mu {
-namespace io {
-using path = std::string;
-
-#ifndef NO_QT_SUPPORT
-path pathFromQString(const QString& s);
-QString pathToQString(const path& p);
-#endif
-
-path syffix(const path& path);
-std::string basename(const path& path);
-
-QString escapeFileName(QString fn);
-}
+void WidgetStateStore::saveGeometry(const QWidget* qw)
+{
+    QSettings settings;
+    QString objectName = qw->objectName();
+    Q_ASSERT(!objectName.isEmpty());
+    settings.beginGroup("Geometries");
+    settings.setValue(objectName, qw->saveGeometry());
+    settings.endGroup();
 }
 
-#endif // MU_IO_PATH_H
+void WidgetStateStore::restoreGeometry(QWidget* qw)
+{
+    //if (!useFactorySettings) { //! TODO
+    QSettings settings;
+    QString objectName = qw->objectName();
+    Q_ASSERT(!objectName.isEmpty());
+    settings.beginGroup("Geometries");
+    qw->restoreGeometry(settings.value(objectName).toByteArray());
+    settings.endGroup();
+    // }
+}

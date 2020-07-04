@@ -16,26 +16,17 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_IO_PATH_H
-#define MU_IO_PATH_H
+#ifndef WIDGETSTATESTORE_H
+#define WIDGETSTATESTORE_H
 
-#include <string>
-#include <QString>
+class QWidget;
 
-namespace mu {
-namespace io {
-using path = std::string;
+class WidgetStateStore
+{
+public:
 
-#ifndef NO_QT_SUPPORT
-path pathFromQString(const QString& s);
-QString pathToQString(const path& p);
-#endif
+    static void saveGeometry(const QWidget* qw);
+    static void restoreGeometry(QWidget* qw);
+};
 
-path syffix(const path& path);
-std::string basename(const path& path);
-
-QString escapeFileName(QString fn);
-}
-}
-
-#endif // MU_IO_PATH_H
+#endif // WIDGETSTATESTORE_H
