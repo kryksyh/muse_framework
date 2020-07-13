@@ -17,37 +17,26 @@
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
 
-#ifndef MU_FRAMEWORK_LOG_H
-#define MU_FRAMEWORK_LOG_H
+#ifndef MU_AUDIO_LINUXAUDIODRIVER_H
+#define MU_AUDIO_LINUXAUDIODRIVER_H
 
-#include <QDebug>
+#include "../../iaudiodriver.h"
 
-inline QDebug operator<<(QDebug debug, const std::string& s)
+namespace mu {
+namespace audio {
+namespace engine {
+class LinuxAudioDriver : public IAudioDriver
 {
-    debug << s.c_str();
-    return debug;
+public:
+    LinuxAudioDriver();
+
+    std::string name() const override;
+    DeviceID open(const Spec& spec, Spec* activeSpec) override;
+    void close(DeviceID devId) override;
+    bool isOpened() const override;
+};
+}
+}
 }
 
-#define LOGD() qDebug()
-#define LOGI() qInfo()
-#define LOGW() qWarning()
-#define LOGE() qCritical()
-
-#define IF_ASSERT_FAILED_X(cond, msg) if (!(cond)) { \
-        LOGE() << "\"ASSERT FAILED!\":" << msg << __FILE__ << __LINE__; \
-        Q_ASSERT(cond); \
-} \
-    if (!(cond)) \
-
-#define IF_ASSERT_FAILED(cond) IF_ASSERT_FAILED_X(cond, #cond)
-
-#define IF_FAILED(cond) if (!(cond)) { \
-        LOGE() << "\"FAILED!\":" << #cond << __FILE__ << __LINE__; \
-} \
-    if (!(cond)) \
-
-#define NOT_IMPLEMENTED LOGE() << "NOT IMPLEMENTED "
-#define NOT_SUPPORTED LOGE() << "NOT SUPPORTED "
-#define UNUSED(x) (void)x;
-
-#endif // MU_FRAMEWORK_LOG_H
+#endif // MU_AUDIO_LINUXAUDIODRIVER_H
