@@ -16,30 +16,19 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_WORKSPACE_WORKSPACECONFIGURATION_H
-#define MU_WORKSPACE_WORKSPACECONFIGURATION_H
+#include "systemmodule.h"
 
-#include "../iworkspaceconfiguration.h"
 #include "modularity/ioc.h"
-#include "iglobalconfiguration.h"
-#include "extensions/iextensionsconfiguration.h"
+#include "internal/fsoperations.h"
 
-namespace mu {
-namespace workspace {
-class WorkspaceConfiguration : public IWorkspaceConfiguration
+using namespace mu::framework;
+
+std::string SystemModule::moduleName() const
 {
-    INJECT(workspace, framework::IGlobalConfiguration, globalConfiguration)
-    INJECT(workspace, extensions::IExtensionsConfiguration, extensionsConfigurator)
-
-public:
-
-    std::vector<io::path> workspacePaths() const override;
-    std::string currentWorkspaceName() const override;
-
-private:
-    std::vector<io::path> extensionsPaths() const;
-};
-}
+    return "system";
 }
 
-#endif // MU_WORKSPACE_WORKSPACECONFIGURATION_H
+void SystemModule::registerExports()
+{
+    framework::ioc()->registerExport<IFsOperations>(moduleName(), new FsOperations());
+}

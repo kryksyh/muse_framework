@@ -16,30 +16,33 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_WORKSPACE_WORKSPACECONFIGURATION_H
-#define MU_WORKSPACE_WORKSPACECONFIGURATION_H
+#ifndef MU_FRAMEWORK_FSOPERATIONS_H
+#define MU_FRAMEWORK_FSOPERATIONS_H
 
-#include "../iworkspaceconfiguration.h"
-#include "modularity/ioc.h"
-#include "iglobalconfiguration.h"
-#include "extensions/iextensionsconfiguration.h"
+#include "ifsoperations.h"
 
 namespace mu {
-namespace workspace {
-class WorkspaceConfiguration : public IWorkspaceConfiguration
+namespace framework {
+class FsOperations : public IFsOperations
 {
-    INJECT(workspace, framework::IGlobalConfiguration, globalConfiguration)
-    INJECT(workspace, extensions::IExtensionsConfiguration, extensionsConfigurator)
-
 public:
+    Ret exists(const QString& path) const override;
+    Ret remove(const QString& path) const override;
 
-    std::vector<io::path> workspacePaths() const override;
-    std::string currentWorkspaceName() const override;
+    RetVal<QString> fileName(const QString& filePath) const override;
+    RetVal<QString> baseName(const QString& filePath) const override;
+
+    RetVal<QByteArray> readFile(const QString& filePath) const override;
+    Ret makePath(const QString& path) const override;
+
+    RetVal<QStringList> directoryFileList(const QString& path, const QStringList& nameFilters,
+                                          QDir::Filters filters) const override;
 
 private:
-    std::vector<io::path> extensionsPaths() const;
+    Ret removeFile(const QString& path) const;
+    Ret removeDir(const QString& path) const;
 };
 }
 }
 
-#endif // MU_WORKSPACE_WORKSPACECONFIGURATION_H
+#endif // MU_FRAMEWORK_FSOPERATIONS_H
