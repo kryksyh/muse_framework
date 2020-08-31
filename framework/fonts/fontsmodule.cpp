@@ -16,32 +16,35 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_FRAMEWORK_GLOBALCONFIGURATION_H
-#define MU_FRAMEWORK_GLOBALCONFIGURATION_H
+#include "fontsmodule.h"
 
-#include "../iglobalconfiguration.h"
+#include "modularity/ioc.h"
 
-namespace mu {
-namespace framework {
-class GlobalConfiguration : public IGlobalConfiguration
+using namespace mu::fonts;
+
+static void init_fonts_qrc()
 {
-public:
-    GlobalConfiguration() = default;
-
-    io::path sharePath() const override;
-    io::path dataPath() const override;
-    io::path backupPath() const override;
-
-    bool useFactorySettings() const override;
-    bool enableExperimental() const override;
-
-private:
-
-    QString getSharePath() const;
-
-    mutable io::path m_sharePath;
-    mutable io::path m_dataPath;
-};
+    Q_INIT_RESOURCE(fonts_Bravura);
+    Q_INIT_RESOURCE(fonts_Campania);
+    Q_INIT_RESOURCE(fonts_Free);
+    Q_INIT_RESOURCE(fonts_FreeSerif);
+    Q_INIT_RESOURCE(fonts_Gootville);
+    Q_INIT_RESOURCE(fonts_MScore);
+    Q_INIT_RESOURCE(fonts_MuseJazz);
+    Q_INIT_RESOURCE(fonts_Smufl);
+    Q_INIT_RESOURCE(fonts_Tabulature);
 }
+
+std::string FontsModule::moduleName() const
+{
+    return "fonts";
 }
-#endif // MU_FRAMEWORK_GLOBALCONFIGURATION_H
+
+void FontsModule::registerResources()
+{
+    init_fonts_qrc();
+}
+
+void FontsModule::registerExports()
+{
+}
