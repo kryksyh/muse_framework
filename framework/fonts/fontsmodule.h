@@ -16,32 +16,22 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_FRAMEWORK_GLOBALCONFIGURATION_H
-#define MU_FRAMEWORK_GLOBALCONFIGURATION_H
+#ifndef MU_FONTS_FONTSMODULE_H
+#define MU_FONTS_FONTSMODULE_H
 
-#include "../iglobalconfiguration.h"
+#include "modularity/imodulesetup.h"
 
 namespace mu {
-namespace framework {
-class GlobalConfiguration : public IGlobalConfiguration
+namespace fonts {
+class FontsModule : public framework::IModuleSetup
 {
 public:
-    GlobalConfiguration() = default;
 
-    io::path sharePath() const override;
-    io::path dataPath() const override;
-    io::path backupPath() const override;
-
-    bool useFactorySettings() const override;
-    bool enableExperimental() const override;
-
-private:
-
-    QString getSharePath() const;
-
-    mutable io::path m_sharePath;
-    mutable io::path m_dataPath;
+    std::string moduleName() const override;
+    void registerResources() override;
+    void registerExports() override;
 };
 }
 }
-#endif // MU_FRAMEWORK_GLOBALCONFIGURATION_H
+
+#endif // MU_FONTS_FONTSMODULE_H
