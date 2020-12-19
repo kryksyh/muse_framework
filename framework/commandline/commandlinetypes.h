@@ -24,13 +24,18 @@
 #include <vector>
 
 namespace mu::commandline {
-using CommandLineOption = std::pair<std::string /*short*/, std::string /*long*/>;
+using CommandLineOption = std::list<std::string>;
 using CommandLineValue = std::string;
 using CommandLineValues = std::vector<CommandLineValue>;
 
 inline bool operator ==(const CommandLineOption& opt, const std::string& str)
 {
-    return opt.first == str || opt.second == str;
+    for (const std::string& o : opt) {
+        if (o == str) {
+            return true;
+        }
+    }
+    return false;
 }
 }
 
