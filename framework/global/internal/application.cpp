@@ -16,20 +16,25 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#include "commandlinemodule.h"
+#include "application.h"
 
-#include "modularity/ioc.h"
+using namespace mu::framework;
 
-#include "internal/commandlineregister.h"
-
-using namespace mu::commandline;
-
-std::string CommandLineModule::moduleName() const
+void Application::setRunMode(const RunMode& mode)
 {
-    return "commandline";
+    m_runMode = mode;
 }
 
-void CommandLineModule::registerExports()
+IApplication::RunMode Application::runMode() const
 {
-    framework::ioc()->registerExport<ICommandLineRegister>(moduleName(), new CommandLineRegister());
+    return m_runMode;
+}
+
+bool Application::noGui() const
+{
+    switch (m_runMode) {
+    case RunMode::Editor: return false;
+    case RunMode::Converter: return true;
+    }
+    return false;
 }
