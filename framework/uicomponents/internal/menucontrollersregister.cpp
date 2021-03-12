@@ -2,7 +2,7 @@
 //  MuseScore
 //  Music Composition & Notation
 //
-//  Copyright (C) 2020 MuseScore BVBA and others
+//  Copyright (C) 2021 MuseScore BVBA and others
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License version 2.
@@ -16,23 +16,32 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
+#include "menucontrollersregister.h"
 
-#ifndef MU_UICOMPONENTS_UICOMPONENTSMODULE_H
-#define MU_UICOMPONENTS_UICOMPONENTSMODULE_H
+using namespace mu::uicomponents;
 
-#include "framework/global/modularity/imodulesetup.h"
-
-namespace mu::uicomponents {
-class UiComponentsModule : public framework::IModuleSetup
+void MenuControllersRegister::registerController(MenuType menuType, IMenuControllerPtr controller)
 {
-public:
-
-    std::string moduleName() const override;
-
-    void registerExports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
-};
+    m_controllers[menuType] = controller;
 }
 
-#endif // MU_UICOMPONENTS_UICOMPONENTSMODULE_H
+IMenuControllerPtr MenuControllersRegister::controller(MenuType menuType) const
+{
+    auto it = m_controllers.find(menuType);
+    if (it != m_controllers.end()) {
+        return it->second;
+    }
+
+    return nullptr;
+}
+
+IMenuControllerPtrList MenuControllersRegister::controllers() const
+{
+    IMenuControllerPtrList result;
+
+    for (auto it = m_controllers.begin(); it != m_controllers.end(); ++it) {
+        result.push_back(it->second);
+    }
+
+    return result;
+}
