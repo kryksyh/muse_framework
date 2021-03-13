@@ -2,7 +2,7 @@
 //  MuseScore
 //  Music Composition & Notation
 //
-//  Copyright (C) 2020 MuseScore BVBA and others
+//  Copyright (C) 2021 MuseScore BVBA and others
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License version 2.
@@ -16,23 +16,23 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
+#ifndef MU_ACTIONS_IACTIONSAVAILABILITY_H
+#define MU_ACTIONS_IACTIONSAVAILABILITY_H
 
-#ifndef MU_UICOMPONENTS_UICOMPONENTSMODULE_H
-#define MU_UICOMPONENTS_UICOMPONENTSMODULE_H
+#include "async/channel.h"
+#include "actiontypes.h"
 
-#include "framework/global/modularity/imodulesetup.h"
-
-namespace mu::uicomponents {
-class UiComponentsModule : public framework::IModuleSetup
+namespace mu::actions {
+class IActionsAvailability
 {
 public:
+    virtual ~IActionsAvailability() = default;
 
-    std::string moduleName() const override;
-
-    void registerExports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
+    virtual bool actionAvailable(const actions::ActionCode& actionCode) const = 0;
+    virtual async::Channel<actions::ActionCodeList> actionsAvailableChanged() const = 0;
 };
+
+using IActionsAvailabilityPtr = std::shared_ptr<IActionsAvailability>;
 }
 
-#endif // MU_UICOMPONENTS_UICOMPONENTSMODULE_H
+#endif // MU_ACTIONS_IACTIONSAVAILABILITY_H

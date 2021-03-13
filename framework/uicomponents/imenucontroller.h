@@ -2,7 +2,7 @@
 //  MuseScore
 //  Music Composition & Notation
 //
-//  Copyright (C) 2020 MuseScore BVBA and others
+//  Copyright (C) 2021 MuseScore BVBA and others
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License version 2.
@@ -16,23 +16,28 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
+#ifndef MU_UICOMPONENTS_IMENUCONTROLLER_H
+#define MU_UICOMPONENTS_IMENUCONTROLLER_H
 
-#ifndef MU_UICOMPONENTS_UICOMPONENTSMODULE_H
-#define MU_UICOMPONENTS_UICOMPONENTSMODULE_H
-
-#include "framework/global/modularity/imodulesetup.h"
+#include "modularity/imoduleexport.h"
+#include "actions/actiontypes.h"
+#include "async/channel.h"
+#include "uicomponentstypes.h"
 
 namespace mu::uicomponents {
-class UiComponentsModule : public framework::IModuleSetup
+class IMenuController
 {
 public:
+    virtual ~IMenuController() = default;
 
-    std::string moduleName() const override;
+    virtual bool contains(const actions::ActionCode& actionCode) const = 0;
+    virtual ActionState actionState(const actions::ActionCode& actionCode) const = 0;
 
-    void registerExports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
+    virtual async::Channel<actions::ActionCodeList> actionsAvailableChanged() const = 0;
 };
+
+using IMenuControllerPtr = std::shared_ptr<IMenuController>;
+using IMenuControllerPtrList = std::vector<IMenuControllerPtr>;
 }
 
-#endif // MU_UICOMPONENTS_UICOMPONENTSMODULE_H
+#endif // MU_UICOMPONENTS_IMENUCONTROLLER_H

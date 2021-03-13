@@ -2,7 +2,7 @@
 //  MuseScore
 //  Music Composition & Notation
 //
-//  Copyright (C) 2020 MuseScore BVBA and others
+//  Copyright (C) 2021 MuseScore BVBA and others
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License version 2.
@@ -16,23 +16,22 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
+#ifndef MU_UICOMPONENTS_MENUCONTROLLERSREGISTER_H
+#define MU_UICOMPONENTS_MENUCONTROLLERSREGISTER_H
 
-#ifndef MU_UICOMPONENTS_UICOMPONENTSMODULE_H
-#define MU_UICOMPONENTS_UICOMPONENTSMODULE_H
-
-#include "framework/global/modularity/imodulesetup.h"
+#include "imenucontrollersregister.h"
 
 namespace mu::uicomponents {
-class UiComponentsModule : public framework::IModuleSetup
+class MenuControllersRegister : public IMenuControllersRegister
 {
 public:
+    void registerController(MenuType menuType, IMenuControllerPtr controller) override;
+    IMenuControllerPtr controller(MenuType menuType) const override;
+    IMenuControllerPtrList controllers() const override;
 
-    std::string moduleName() const override;
-
-    void registerExports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
+private:
+    std::map<MenuType, IMenuControllerPtr> m_controllers;
 };
 }
 
-#endif // MU_UICOMPONENTS_UICOMPONENTSMODULE_H
+#endif // MU_UICOMPONENTS_MENUCONTROLLERSREGISTER_H
