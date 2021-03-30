@@ -2,7 +2,7 @@
 //  MuseScore
 //  Music Composition & Notation
 //
-//  Copyright (C) 2021 MuseScore BVBA and others
+//  Copyright (C) 2020 MuseScore BVBA and others
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License version 2.
@@ -16,25 +16,27 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_UICOMPONENTS_IMENUCONTROLLERSREGISTER_H
-#define MU_UICOMPONENTS_IMENUCONTROLLERSREGISTER_H
+#ifndef MU_UI_IUIACTIONSMODULE_H
+#define MU_UI_IUIACTIONSMODULE_H
 
-#include "modularity/imoduleexport.h"
-#include "uicomponentstypes.h"
-#include "imenucontroller.h"
+#include <memory>
+#include "uitypes.h"
+#include "async/channel.h"
 
-namespace mu::uicomponents {
-class IMenuControllersRegister : MODULE_EXPORT_INTERFACE
+namespace mu::ui {
+class IUiActionsModule
 {
-    INTERFACE_ID(IMenuControllersRegister)
-
 public:
-    virtual ~IMenuControllersRegister() = default;
+    virtual ~IUiActionsModule() = default;
 
-    virtual void registerController(MenuType menuType, IMenuControllerPtr controller) = 0;
-    virtual IMenuControllerPtr controller(MenuType menuType) const = 0;
-    virtual IMenuControllerPtrList controllers() const = 0;
+    virtual const UiActionList& actionsList() const = 0;
+    virtual bool actionEnabled(const UiAction& act) const = 0;
+    virtual async::Channel<actions::ActionCodeList> actionEnabledChanged() const = 0;
+
+    virtual bool actionChecked(const UiAction& act) const = 0;
+    virtual async::Channel<actions::ActionCodeList> actionCheckedChanged() const = 0;
 };
+using IUiActionsModulePtr = std::shared_ptr<IUiActionsModule>;
 }
 
-#endif // MU_UICOMPONENTS_IMENUCONTROLLERSREGISTER_H
+#endif // MU_UI_IUIACTIONSMODULE_H

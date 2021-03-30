@@ -16,22 +16,23 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_UICOMPONENTS_MENUCONTROLLERSREGISTER_H
-#define MU_UICOMPONENTS_MENUCONTROLLERSREGISTER_H
+#ifndef MU_ACTIONS_IACTIONSCONTEXT_H
+#define MU_ACTIONS_IACTIONSCONTEXT_H
 
-#include "imenucontrollersregister.h"
+#include "modularity/imoduleexport.h"
+#include "actiontypes.h"
 
-namespace mu::uicomponents {
-class MenuControllersRegister : public IMenuControllersRegister
+namespace mu::actions {
+//! NOTE Implemented in the context module
+class IActionsContext : MODULE_EXPORT_INTERFACE
 {
-public:
-    void registerController(MenuType menuType, IMenuControllerPtr controller) override;
-    IMenuControllerPtr controller(MenuType menuType) const override;
-    IMenuControllerPtrList controllers() const override;
+    INTERFACE_ID(IActionsContext)
 
-private:
-    std::map<MenuType, IMenuControllerPtr> m_controllers;
+public:
+    virtual ~IActionsContext() = default;
+
+    virtual AppContext currentContext() const = 0;
 };
 }
 
-#endif // MU_UICOMPONENTS_MENUCONTROLLERSREGISTER_H
+#endif // MU_ACTIONS_IACTIONSCONTEXT_H

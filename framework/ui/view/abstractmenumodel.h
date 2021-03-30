@@ -16,44 +16,41 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#ifndef MU_UICOMPONENTS_ABSTRACTMENUMODEL_H
-#define MU_UICOMPONENTS_ABSTRACTMENUMODEL_H
+#ifndef MU_UI_ABSTRACTMENUMODEL_H
+#define MU_UI_ABSTRACTMENUMODEL_H
 
 #include <QObject>
 
 #include <optional>
 
 #include "modularity/ioc.h"
-#include "actions/actiontypes.h"
-#include "actions/iactionsregister.h"
+#include "async/asyncable.h"
+#include "../uitypes.h"
+#include "../iuiactionsregister.h"
 #include "shortcuts/ishortcutsregister.h"
-#include "../uicomponentstypes.h"
 
-namespace mu::uicomponents {
-class AbstractMenuModel
+namespace mu::ui {
+class AbstractMenuModel : public async::Asyncable
 {
-    INJECT(appshell, actions::IActionsRegister, actionsRegister)
-    INJECT(appshell, shortcuts::IShortcutsRegister, shortcutsRegister)
+    INJECT(ui, IUiActionsRegister, uiactionsRegister)
 
 public:
     QVariantList items() const;
 
-    virtual ActionState actionState(const actions::ActionCode& actionCode) const;
-
 protected:
     void clear();
     void appendItem(const MenuItem& item);
+    void listenActionsStateChanges();
+    virtual void onActionsStateChanges(const actions::ActionCodeList& codes);
 
     MenuItem& findItem(const actions::ActionCode& actionCode);
     MenuItem& findItemByIndex(const actions::ActionCode& menuActionCode, int actionIndex);
     MenuItem& findMenu(const actions::ActionCode& subitemsActionCode);
 
-    MenuItem makeMenu(const std::string& title, const MenuItemList& actions, bool enabled = true,
+    MenuItem makeMenu(const QString& title, const MenuItemList& items, bool enabled = true,
                       const actions::ActionCode& menuActionCode = "") const;
     MenuItem makeAction(const actions::ActionCode& actionCode) const;
     MenuItem makeSeparator() const;
-
-    void updateItemsState(const actions::ActionCodeList& actionCodes);
 
 private:
     MenuItem& item(MenuItemList& items, const actions::ActionCode& actionCode);
@@ -63,4 +60,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_ABSTRACTMENUMODEL_H
+#endif // MU_UI_ABSTRACTMENUMODEL_H
