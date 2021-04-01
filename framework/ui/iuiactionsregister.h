@@ -2,7 +2,7 @@
 //  MuseScore
 //  Music Composition & Notation
 //
-//  Copyright (C) 2021 MuseScore BVBA and others
+//  Copyright (C) 2020 MuseScore BVBA and others
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License version 2.
@@ -16,32 +16,29 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //=============================================================================
-#include "menucontrollersregister.h"
+#ifndef MU_UI_IUIACTIONSREGISTER_H
+#define MU_UI_IUIACTIONSREGISTER_H
 
-using namespace mu::uicomponents;
+#include <memory>
+#include "modularity/imoduleexport.h"
+#include "iuiactionsmodule.h"
+#include "uitypes.h"
+#include "async/channel.h"
 
-void MenuControllersRegister::registerController(MenuType menuType, IMenuControllerPtr controller)
+namespace mu::ui {
+class IUiActionsRegister : MODULE_EXPORT_INTERFACE
 {
-    m_controllers[menuType] = controller;
+    INTERFACE_ID(IUiActionsRegister)
+
+public:
+    virtual ~IUiActionsRegister() = default;
+
+    virtual void reg(const IUiActionsModulePtr& actions) = 0;
+
+    virtual const UiAction& action(const actions::ActionCode& code) const = 0;
+    virtual UiActionState actionState(const actions::ActionCode& code) const = 0;
+    virtual async::Channel<actions::ActionCodeList> actionStateChanged() const = 0;
+};
 }
 
-IMenuControllerPtr MenuControllersRegister::controller(MenuType menuType) const
-{
-    auto it = m_controllers.find(menuType);
-    if (it != m_controllers.end()) {
-        return it->second;
-    }
-
-    return nullptr;
-}
-
-IMenuControllerPtrList MenuControllersRegister::controllers() const
-{
-    IMenuControllerPtrList result;
-
-    for (auto it = m_controllers.begin(); it != m_controllers.end(); ++it) {
-        result.push_back(it->second);
-    }
-
-    return result;
-}
+#endif // MU_UI_IUIACTIONSREGISTER_H

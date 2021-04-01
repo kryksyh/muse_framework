@@ -18,7 +18,9 @@
 //=============================================================================
 #include "abstractmenumodel.h"
 
-using namespace mu::uicomponents;
+#include "log.h"
+
+using namespace mu::ui;
 using namespace mu::actions;
 
 QVariantList AbstractMenuModel::items() const
@@ -32,13 +34,6 @@ QVariantList AbstractMenuModel::items() const
     return menuItems;
 }
 
-ActionState AbstractMenuModel::actionState(const ActionCode&) const
-{
-    ActionState state;
-    state.enabled = true;
-    return state;
-}
-
 void AbstractMenuModel::clear()
 {
     m_items.clear();
@@ -47,6 +42,13 @@ void AbstractMenuModel::clear()
 void AbstractMenuModel::appendItem(const MenuItem& item)
 {
     m_items << item;
+}
+
+void AbstractMenuModel::listenActionsStateChanges()
+{
+    uiactionsRegister()->actionStateChanged().onReceive(this, [this](const ActionCodeList& codes) {
+        onActionsStateChanges(codes);
+    });
 }
 
 MenuItem& AbstractMenuModel::findItem(const ActionCode& actionCode)
@@ -73,35 +75,30 @@ MenuItem& AbstractMenuModel::findMenu(const ActionCode& subitemsActionCode)
     return menu(m_items, subitemsActionCode);
 }
 
-MenuItem AbstractMenuModel::makeMenu(const std::string& title, const MenuItemList& actions, bool enabled,
+MenuItem AbstractMenuModel::makeMenu(const QString& title, const MenuItemList& items, bool enabled,
                                      const ActionCode& menuActionCode) const
 {
     MenuItem item;
     item.code = menuActionCode;
     item.title = title;
-    item.subitems = actions;
-    item.enabled = enabled;
+    item.subitems = items;
+    item.state.enabled = enabled;
     return item;
 }
 
 MenuItem AbstractMenuModel::makeAction(const ActionCode& actionCode) const
 {
-    ActionItem action = actionsRegister()->action(actionCode);
+    const UiAction& action = uiactionsRegister()->action(actionCode);
+//    IF_ASSERT_FAILED(action.isValid()) {
+//        return MenuItem();
+//    }
+
     if (!action.isValid()) {
         return MenuItem();
     }
 
     MenuItem item = action;
-
-    ActionState actionState = this->actionState(actionCode);
-    item.enabled = actionState.enabled;
-    item.checkable = actionState.checkable;
-    item.checked = actionState.checked;
-
-    shortcuts::Shortcut shortcut = shortcutsRegister()->shortcut(action.code);
-    if (shortcut.isValid()) {
-        item.shortcut = shortcut.sequence;
-    }
+    item.state = uiactionsRegister()->actionState(actionCode);
 
     return item;
 }
@@ -109,23 +106,20 @@ MenuItem AbstractMenuModel::makeAction(const ActionCode& actionCode) const
 MenuItem AbstractMenuModel::makeSeparator() const
 {
     MenuItem item;
-    item.title = std::string();
+    item.title = QString();
     return item;
 }
 
-void AbstractMenuModel::updateItemsState(const ActionCodeList& actionCodes)
+void AbstractMenuModel::onActionsStateChanges(const actions::ActionCodeList& codes)
 {
-    if (actionCodes.empty()) {
+    if (codes.empty()) {
         return;
     }
 
-    for (const ActionCode& actionCode: actionCodes) {
-        MenuItem& actionItem = findItem(actionCode);
+    for (const ActionCode& code : codes) {
+        MenuItem& actionItem = findItem(code);
         if (actionItem.isValid()) {
-            ActionState actionState = this->actionState(actionCode);
-            actionItem.enabled = actionState.enabled;
-            actionItem.checkable = actionState.checkable;
-            actionItem.checked = actionState.checked;
+            actionItem.state = uiactionsRegister()->actionState(code);
         }
     }
 }
