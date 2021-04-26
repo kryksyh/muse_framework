@@ -26,6 +26,7 @@
 
 class QMainWindow;
 class QWidget;
+class QWindow;
 
 namespace mu::ui {
 class IMainWindow : MODULE_EXPORT_INTERFACE
