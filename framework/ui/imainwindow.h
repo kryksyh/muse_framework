@@ -25,19 +25,23 @@
 #include "modularity/imoduleexport.h"
 
 class QMainWindow;
-class QWidget;
 class QWindow;
+class QScreen;
 
 namespace mu::ui {
 class IMainWindow : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IMainWindow)
+
 public:
     virtual ~IMainWindow() = default;
 
-    virtual QMainWindow* qMainWindow() = 0;
-    virtual QWindow* qWindow() = 0;
-    virtual void stackUnder(QWidget*) = 0;
+    virtual QMainWindow* qMainWindow() const = 0;
+    virtual QWindow* qWindow() const = 0;
+
+    virtual bool isFullScreen() const = 0;
+    virtual void toggleFullScreen() = 0;
+    virtual const QScreen* screen() const = 0;
 };
 }
 
