@@ -19,34 +19,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_UI_NAVIGATIONPOPUPPANEL_H
-#define MU_UI_NAVIGATIONPOPUPPANEL_H
 
-#include <QObject>
-#include "navigationpanel.h"
+#ifndef MU_UICOMPONENTS_DIALOGVIEW_H
+#define MU_UICOMPONENTS_DIALOGVIEW_H
 
-namespace mu::ui {
-class NavigationPopupPanel : public NavigationPanel
+#include <QEventLoop>
+
+#include "popupview.h"
+
+namespace mu::uicomponents {
+class DialogView : public PopupView
 {
     Q_OBJECT
 
-    Q_PROPERTY(NavigationControl * parentControl READ parentControl_property WRITE setParentControl NOTIFY parentControlChanged)
-
 public:
-    explicit NavigationPopupPanel(QObject* parent = nullptr);
+    explicit DialogView(QQuickItem* parent = nullptr);
+    ~DialogView() override = default;
 
-    INavigationControl* parentControl() const;
-    NavigationControl* parentControl_property() const;
-
-public slots:
-    void setParentControl(NavigationControl* parentControl);
-    void setParentControl(INavigationControl* parentControl);
-
-signals:
-    void parentControlChanged();
+    Q_INVOKABLE void exec();
+    Q_INVOKABLE void show();
+    Q_INVOKABLE void hide();
+    Q_INVOKABLE void accept();
+    Q_INVOKABLE void reject(int code = -1);
 
 private:
-    INavigationControl* m_parentControl = nullptr;
+    bool isDialog() const override;
+    void beforeShow() override;
+    void onHidden() override;
+
+    QEventLoop m_loop;
 };
 }
-#endif // MU_UI_NAVIGATIONPOPUPPANEL_H
+
+#endif // MU_UICOMPONENTS_DIALOGVIEW_H
