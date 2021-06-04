@@ -19,27 +19,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_SYSTEM_FILESYSTEMMOCK_H
-#define MU_SYSTEM_FILESYSTEMMOCK_H
+#ifndef MU_NETWORK_NETWORKTYPES_H
+#define MU_NETWORK_NETWORKTYPES_H
 
-#include <gmock/gmock.h>
+#include <QVariantMap>
+#include <QNetworkRequest>
 
-#include "framework/system/ifilesystem.h"
-
-namespace mu::system {
-class FileSystemMock : public IFileSystem
+namespace mu::network {
+struct RequestHeaders
 {
-public:
-    MOCK_METHOD(Ret, exists, (const io::path&), (const, override));
-    MOCK_METHOD(Ret, remove, (const io::path&), (const, override));
-
-    MOCK_METHOD(RetVal<QByteArray>, readFile, (const io::path&), (const, override));
-    MOCK_METHOD(Ret, writeToFile, (const io::path&, const QByteArray&), (const, override));
-
-    MOCK_METHOD(Ret, makePath, (const io::path&), (const, override));
-
-    MOCK_METHOD(RetVal<io::paths>, scanFiles, (const io::path&, const QStringList&, ScanMode), (const, override));
+    QMap<QNetworkRequest::KnownHeaders, QVariant> knownHeaders;
+    QMap<QByteArray, QByteArray> rawHeaders;
 };
 }
 
-#endif // MU_SYSTEM_FILESYSTEMMOCK_H
+#endif // MU_NETWORK_NETWORKTYPES_H
