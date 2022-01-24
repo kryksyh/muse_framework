@@ -33,4 +33,15 @@ TabBar {
     background: Item {
         implicitHeight: 32
     }
+
+    function focusOnTab(index) {
+        let item = itemAt(index)
+        if (item && item.navigation) {
+            item.navigation.requestActive()
+        }
+    }
+
+    function focusOnCurrentTab() {
+        focusOnTab(currentIndex)
+    }
 }
