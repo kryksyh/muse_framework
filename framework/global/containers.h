@@ -19,32 +19,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "application.h"
+#ifndef MU_GLOBAL_CONTAINERS_H
+#define MU_GLOBAL_CONTAINERS_H
 
-#include <QCoreApplication>
+#include <algorithm>
 
-using namespace mu::framework;
+//! NOTE useful functions for containers
 
-void Application::setRunMode(const RunMode& mode)
+namespace mu {
+template<typename Container, typename T>
+inline bool contains(const Container& c, const T& v)
 {
-    m_runMode = mode;
+    return std::find(c.cbegin(), c.cend(), v) != c.cend();
 }
 
-IApplication::RunMode Application::runMode() const
+template<typename Container, typename T>
+inline bool remove(Container& c, const T& v)
 {
-    return m_runMode;
+    return c.erase(std::remove(c.begin(), c.end(), v), c.end()) != c.end();
 }
 
-bool Application::noGui() const
+template<typename Container, typename T>
+inline int indexOf(const Container& c, const T& v)
 {
-    switch (m_runMode) {
-    case RunMode::Editor: return false;
-    case RunMode::Converter: return true;
+    auto it = std::find(c.cbegin(), c.cend(), v);
+    if (it != c.cend()) {
+        return std::distance(c.cbegin(), it);
     }
-    return false;
+    return -1;
+}
 }
 
-bool Application::notify(QObject* object, QEvent* event)
-{
-    return qApp->notify(object, event);
-}
+#endif // MU_GLOBAL_CONTAINERS_H
