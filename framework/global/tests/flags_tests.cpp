@@ -19,42 +19,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_GLOBAL_ZIPWRITER_H
-#define MU_GLOBAL_ZIPWRITER_H
+#include <gtest/gtest.h>
 
-#include "io/path.h"
-#include "io/iodevice.h"
+#include "types/flags.h"
 
-namespace mu {
-class ZipWriter
+using namespace mu;
+
+class Global_Types_FlagsTests : public ::testing::Test
 {
 public:
-    enum Status {
-        NoError,
-        FileWriteError,
-        FileOpenError,
-        FilePermissionsError,
-        FileError
+
+    enum Option {
+        NoOption = 0x0,
+        Option1 = 0x1,
+        Option2 = 0x2,
+        Option3 = 0x4
     };
-
-    explicit ZipWriter(const io::path_t& filePath);
-    explicit ZipWriter(io::IODevice* device);
-    ~ZipWriter();
-
-    void close();
-    Status status() const;
-
-    void addFile(const std::string& fileName, const ByteArray& data);
-
-private:
-
-    void flush();
-
-    struct Impl;
-    Impl* m_impl = nullptr;
-    io::IODevice* m_device = nullptr;
-    bool m_selfDevice = false;
+    DECLARE_FLAGS(Options, Option)
 };
-}
 
-#endif // MU_GLOBAL_ZIPWRITER_H
+TEST_F(Global_Types_FlagsTests, Flags)
+{
+    //! GIVE
+    Options opts(Option1 | Option2);
+    //! CHECK
+    EXPECT_TRUE(opts.testFlag(Option1));
+    EXPECT_TRUE(opts.testFlag(Option2));
+    EXPECT_FALSE(opts.testFlag(Option3));
+}
