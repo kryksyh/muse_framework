@@ -18,10 +18,31 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+echo "Setup environment for run lupdate"
+trap 'echo Setup failed; exit 1' ERR
 
 BUILD_TOOLS=$HOME/build_tools
-ENV_FILE=$BUILD_TOOLS/lupdate_environment.sh
+mkdir -p $BUILD_TOOLS
 
-source $ENV_FILE
+ENV_FILE=$BUILD_TOOLS/environment.sh
+rm -f $ENV_FILE
 
-bash ./tools/translations/run_lupdate.sh
+echo "echo 'Setup environment for run lupdate'" >> ${ENV_FILE}
+
+##########################################################################
+# GET QT
+##########################################################################
+qt_version="5152"
+qt_dir="$BUILD_TOOLS/Qt/${qt_version}"
+if [[ ! -d "${qt_dir}" ]]; then
+  mkdir -p "${qt_dir}"
+  qt_url="https://s3.amazonaws.com/utils.musescore.org/Qt${qt_version}_gcc64.7z"
+  wget -q --show-progress -O qt5.7z "${qt_url}"
+  7z x -y qt5.7z -o"${qt_dir}"
+fi
+
+echo export PATH="${qt_dir}/bin:\${PATH}" >> ${ENV_FILE}
+
+chmod +x "${ENV_FILE}"
+
+echo "Setup script done"
