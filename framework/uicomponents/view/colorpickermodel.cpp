@@ -19,24 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_FRAMEWORK_VERSION_H
-#define MU_FRAMEWORK_VERSION_H
 
-#include <string>
+#include "colorpickermodel.h"
 
-namespace mu::framework {
-class Version
+using namespace mu::uicomponents;
+
+ColorPickerModel::ColorPickerModel(QObject* parent)
+    : QObject(parent)
 {
-public:
-    static bool unstable();
-    static std::string version();
-    static std::string fullVersion();  // e.g. 3.4.0-Beta
-    static std::string revision();
-
-    static int majorVersion();
-    static int minorVersion();
-    static int patchVersion();
-};
 }
 
-#endif // MU_FRAMEWORK_VERSION_H
+QColor ColorPickerModel::selectColor(const QColor& currentColor)
+{
+    return interactive()->selectColor(currentColor);
+}

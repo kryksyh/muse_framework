@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2022 MuseScore BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,24 +19,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_FRAMEWORK_VERSION_H
-#define MU_FRAMEWORK_VERSION_H
 
-#include <string>
+#ifndef MU_GLOBAL_DLIB_H
+#define MU_GLOBAL_DLIB_H
 
-namespace mu::framework {
-class Version
+#ifdef Q_OS_WIN
+#include <windows.h>
+#else
+#include <dlfcn.h>
+#endif
+
+#include "io/path.h"
+
+namespace mu {
+inline void* loadLib(const io::path_t& path)
 {
-public:
-    static bool unstable();
-    static std::string version();
-    static std::string fullVersion();  // e.g. 3.4.0-Beta
-    static std::string revision();
-
-    static int majorVersion();
-    static int minorVersion();
-    static int patchVersion();
-};
+#ifdef Q_OS_WIN
+    return LoadLibrary(path.toStdWString().c_str());
+#else
+    return dlopen(path.c_str(), RTLD_LAZY);
+#endif
 }
 
-#endif // MU_FRAMEWORK_VERSION_H
+inline void* getLibFunc(void* libHandle, const char* funcName)
+{
+#ifdef Q_OS_WIN
+    return GetProcAddress((HINSTANCE)libHandle, funcName);
+#else
+    return dlsym(libHandle, funcName);
+#endif
+}
+
+inline void closeLib(void* libHandle)
+{
+#ifdef Q_OS_WIN
+    return;
+#else
+    dlclose(libHandle);
+#endif
+}
+}
+
+#endif // MU_GLOBAL_DLIB_H

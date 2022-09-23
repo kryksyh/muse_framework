@@ -19,36 +19,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_MIDI_ABSTRACTMIDIINPORT_H
-#define MU_MIDI_ABSTRACTMIDIINPORT_H
 
-#include <QTimer>
+#ifndef MU_UICOMPONENTS_COLORPICKER_H
+#define MU_UICOMPONENTS_COLORPICKER_H
 
-#include "async/asyncable.h"
+#include <QObject>
 
-#include "imidiinport.h"
+#include "modularity/ioc.h"
+#include "iinteractive.h"
 
-namespace mu::midi {
-class AbstractMidiInPort : public IMidiInPort, public async::Asyncable
+namespace mu::uicomponents {
+class ColorPickerModel : public QObject
 {
+    Q_OBJECT
+
+    INJECT(uicomponents, framework::IInteractive, interactive)
+
 public:
-    virtual void init();
+    explicit ColorPickerModel(QObject* parent = nullptr);
 
-    async::Channel<std::vector<std::pair<tick_t, Event> > > eventsReceived() const override;
-
-protected:
-    void doEventsRecived(const std::vector<std::pair<tick_t, Event> >& events);
-
-private:
-    void doProcessEvents();
-
-    async::Channel<std::vector<std::pair<tick_t, Event> > > m_eventReceived;
-
-    QTimer m_processTimer;
-    std::vector<std::pair<tick_t, Event> > m_eventsQueue;
-
-    std::thread::id m_mainThreadID;
+    Q_INVOKABLE QColor selectColor(const QColor& currentColor);
 };
 }
 
-#endif // MU_MIDI_ABSTRACTMIDIINPORT_H
+#endif // MU_UICOMPONENTS_COLORPICKER_H
