@@ -19,14 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_DRAW_DRAWJSON_H
-#define MU_DRAW_DRAWJSON_H
+#ifndef MU_DRAW_DRAWDATAJSON_H
+#define MU_DRAW_DRAWDATAJSON_H
 
 #include "../buffereddrawtypes.h"
 #include "types/retval.h"
 
 namespace mu::draw {
-class DrawBufferJson
+class DrawDataJson
 {
 public:
 
@@ -34,4 +34,4 @@ public:
     static RetVal<DrawDataPtr> fromJson(const ByteArray& json);
 };
 }
-#endif // MU_DRAW_DRAWJSON_H
+#endif // MU_DRAW_DRAWDATAJSON_H
