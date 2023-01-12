@@ -19,19 +19,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_DRAW_DRAWDATAJSON_H
-#define MU_DRAW_DRAWDATAJSON_H
+#ifndef MU_DRAW_DRAWDATAPAINT_H
+#define MU_DRAW_DRAWDATAPAINT_H
 
-#include "../buffereddrawtypes.h"
-#include "types/retval.h"
+#include "../painter.h"
+#include "../types/drawdata.h"
 
 namespace mu::draw {
-class DrawDataJson
+class DrawDataPaint
 {
 public:
+    DrawDataPaint() = default;
 
-    static ByteArray toJson(const DrawData& buf);
-    static RetVal<DrawDataPtr> fromJson(const ByteArray& json);
+    static void paint(Painter* painter, const DrawDataPtr& data);
 };
 }
-#endif // MU_DRAW_DRAWDATAJSON_H
+
+#endif // MU_DRAW_DRAWDATAPAINT_H

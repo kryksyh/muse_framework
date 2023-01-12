@@ -19,27 +19,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_DRAW_DRAWLOGGER_H
-#define MU_DRAW_DRAWLOGGER_H
+#ifndef MU_DRAW_DRAWDATACOMP_H
+#define MU_DRAW_DRAWDATACOMP_H
 
-#include <stack>
-#include <string>
-
-#include "../types/geometry.h"
+#include "../types/drawdata.h"
 
 namespace mu::draw {
-class DrawObjectsLogger
+class DrawDataComp
 {
 public:
-    DrawObjectsLogger() = default;
 
-    void beginObject(const std::string& name, const PointF& pagePos);
-    void endObject();
+    struct Tolerance {
+        double base = -1.0;
+        Tolerance() {}
+    };
 
-private:
-
-    std::stack<std::string> m_objects;
+    static Diff compare(const DrawDataPtr& data, const DrawDataPtr& origin, Tolerance tolerance = Tolerance());
 };
 }
 
-#endif // MU_DRAW_DRAWLOGGER_H
+#endif // MU_DRAW_DRAWDATACOMP_H
