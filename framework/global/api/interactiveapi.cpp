@@ -19,19 +19,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ACTIONS_ACTIONSMODULE_H
-#define MU_ACTIONS_ACTIONSMODULE_H
+#include <QUrl>
 
-#include "modularity/imodulesetup.h"
+#include "interactiveapi.h"
 
-namespace mu::actions {
-class ActionsModule : public modularity::IModuleSetup
+using namespace mu::api;
+
+InteractiveApi::InteractiveApi(IApiEngine* e)
+    : ApiObject(e)
 {
-public:
-    std::string moduleName() const override;
-    void registerExports() override;
-    void registerApi() override;
-};
 }
 
-#endif // MU_ACTIONS_ACTIONSMODULE_H
+void InteractiveApi::info(const QString& title, const QString& text)
+{
+    interactive()->info(title.toStdString(), text.toStdString());
+}
+
+void InteractiveApi::openUrl(const QString& url)
+{
+    interactive()->openUrl(QUrl(url));
+}

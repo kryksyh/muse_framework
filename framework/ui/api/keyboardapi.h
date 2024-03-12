@@ -19,19 +19,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ACTIONS_ACTIONSMODULE_H
-#define MU_ACTIONS_ACTIONSMODULE_H
+#ifndef MU_API_KEYBOARDAPI_H
+#define MU_API_KEYBOARDAPI_H
 
-#include "modularity/imodulesetup.h"
+#include "api/apiobject.h"
 
-namespace mu::actions {
-class ActionsModule : public modularity::IModuleSetup
+#include "modularity/ioc.h"
+#include "shortcuts/ishortcutscontroller.h"
+#include "ui/imainwindow.h"
+
+namespace mu::api {
+class KeyboardApi : public ApiObject
 {
+    Q_OBJECT
+
+    INJECT(shortcuts::IShortcutsController, shortcutsController)
+    INJECT(ui::IMainWindow, mainWindow)
+
 public:
-    std::string moduleName() const override;
-    void registerExports() override;
-    void registerApi() override;
+    explicit KeyboardApi(IApiEngine* e);
+
+    Q_INVOKABLE void key(const QString& key);
+    Q_INVOKABLE void repeatKey(const QString& key, int count);
+    Q_INVOKABLE void text(const QString& text);
 };
 }
 
-#endif // MU_ACTIONS_ACTIONSMODULE_H
+#endif // MU_API_KEYBOARDAPI_H

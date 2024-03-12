@@ -19,19 +19,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ACTIONS_ACTIONSMODULE_H
-#define MU_ACTIONS_ACTIONSMODULE_H
+#ifndef MU_API_SHORTCUTSAPI_H
+#define MU_API_SHORTCUTSAPI_H
 
-#include "modularity/imodulesetup.h"
+#include "api/apiobject.h"
 
-namespace mu::actions {
-class ActionsModule : public modularity::IModuleSetup
+#include "modularity/ioc.h"
+#include "shortcuts/ishortcutscontroller.h"
+
+namespace mu::api {
+class ShortcutsApi : public ApiObject
 {
+    Q_OBJECT
+
+    INJECT(shortcuts::IShortcutsController, shortcutsController)
+
 public:
-    std::string moduleName() const override;
-    void registerExports() override;
-    void registerApi() override;
+    explicit ShortcutsApi(IApiEngine* e);
+
+    Q_INVOKABLE void activate(const QString& sequence);
 };
 }
 
-#endif // MU_ACTIONS_ACTIONSMODULE_H
+#endif // MU_API_SHORTCUTSAPI_H

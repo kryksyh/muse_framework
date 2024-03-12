@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2023 MuseScore BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,19 +19,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ACTIONS_ACTIONSMODULE_H
-#define MU_ACTIONS_ACTIONSMODULE_H
+#ifndef MU_API_PROCESSAPI_H
+#define MU_API_PROCESSAPI_H
 
-#include "modularity/imodulesetup.h"
+#include <QString>
 
-namespace mu::actions {
-class ActionsModule : public modularity::IModuleSetup
+#include "api/apiobject.h"
+
+#include "modularity/ioc.h"
+#include "global/iprocess.h"
+
+namespace mu::api {
+class ProcessApi : public ApiObject
 {
+    Q_OBJECT
+
+    INJECT(IProcess, process)
+
 public:
-    std::string moduleName() const override;
-    void registerExports() override;
-    void registerApi() override;
+    explicit ProcessApi(IApiEngine* e);
+
+    Q_INVOKABLE int execute(const QString& program, const QStringList& arguments = QStringList());
+    Q_INVOKABLE bool startDetached(const QString& program, const QStringList& arguments = QStringList());
 };
 }
 
-#endif // MU_ACTIONS_ACTIONSMODULE_H
+#endif // MU_API_PROCESSAPI_H

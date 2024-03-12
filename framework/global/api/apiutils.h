@@ -19,19 +19,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ACTIONS_ACTIONSMODULE_H
-#define MU_ACTIONS_ACTIONSMODULE_H
+#ifndef MU_API_APIUTILS_H
+#define MU_API_APIUTILS_H
 
-#include "modularity/imodulesetup.h"
+#include <string>
+#include <vector>
+#include <QString>
 
-namespace mu::actions {
-class ActionsModule : public modularity::IModuleSetup
+namespace mu::api {
+inline std::vector<std::string> toStdVector(const QStringList& l)
 {
-public:
-    std::string moduleName() const override;
-    void registerExports() override;
-    void registerApi() override;
-};
+    std::vector<std::string> v;
+    v.reserve(l.size());
+    for (const QString& s : l) {
+        v.push_back(s.toStdString());
+    }
+    return v;
+}
 }
 
-#endif // MU_ACTIONS_ACTIONSMODULE_H
+#endif // MU_API_APIUTILS_H

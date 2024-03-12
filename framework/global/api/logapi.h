@@ -19,19 +19,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ACTIONS_ACTIONSMODULE_H
-#define MU_ACTIONS_ACTIONSMODULE_H
+#ifndef MU_GLOBAL_LOGAPI_H
+#define MU_GLOBAL_LOGAPI_H
 
-#include "modularity/imodulesetup.h"
+#include "api/apiobject.h"
 
-namespace mu::actions {
-class ActionsModule : public modularity::IModuleSetup
+namespace mu::api {
+class LogApi : public api::ApiObject
 {
+    Q_OBJECT
 public:
-    std::string moduleName() const override;
-    void registerExports() override;
-    void registerApi() override;
+    explicit LogApi(api::IApiEngine* e);
+
+    Q_INVOKABLE void error(const QString& message);
+    Q_INVOKABLE void warn(const QString& message);
+    Q_INVOKABLE void info(const QString& message);
+    Q_INVOKABLE void debug(const QString& message);
+
+    Q_INVOKABLE void error(const QString& tag, const QString& message);
+    Q_INVOKABLE void warn(const QString& tag, const QString& message);
+    Q_INVOKABLE void info(const QString& tag, const QString& message);
+    Q_INVOKABLE void debug(const QString& tag, const QString& message);
 };
 }
 
-#endif // MU_ACTIONS_ACTIONSMODULE_H
+#endif // MU_GLOBAL_LOGAPI_H

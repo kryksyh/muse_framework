@@ -19,28 +19,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_API_APIOBJECT_H
-#define MU_API_APIOBJECT_H
+#include "shortcutsapi.h"
 
-#include <QObject>
+#include "log.h"
 
-#include "iapiengine.h"
+using namespace mu::api;
 
-namespace mu::api {
-class ApiObject : public QObject
+ShortcutsApi::ShortcutsApi(IApiEngine* e)
+    : ApiObject(e)
 {
-    Q_OBJECT
-
-public:
-    explicit ApiObject(IApiEngine* e)
-        : m_engine(e) {}
-
-    IApiEngine* engine() const { return m_engine; }
-
-private:
-
-    IApiEngine* m_engine = nullptr;
-};
 }
 
-#endif // MU_API_APIOBJECT_H
+void ShortcutsApi::activate(const QString& sequence)
+{
+    TRACEFUNC;
+    shortcutsController()->activate(sequence.toStdString());
+}

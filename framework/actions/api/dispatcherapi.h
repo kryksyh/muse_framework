@@ -19,19 +19,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ACTIONS_ACTIONSMODULE_H
-#define MU_ACTIONS_ACTIONSMODULE_H
+#ifndef MU_ACTIONS_DISPATCHERAPI_H
+#define MU_ACTIONS_DISPATCHERAPI_H
 
-#include "modularity/imodulesetup.h"
+#include <QVariant>
 
-namespace mu::actions {
-class ActionsModule : public modularity::IModuleSetup
+#include "api/apiobject.h"
+
+#include "modularity/ioc.h"
+#include "actions/iactionsdispatcher.h"
+
+namespace mu::api {
+class DispatcherApi : public ApiObject
 {
+    Q_OBJECT
+
+    INJECT(actions::IActionsDispatcher, dispatcher)
+
 public:
-    std::string moduleName() const override;
-    void registerExports() override;
-    void registerApi() override;
+    explicit DispatcherApi(IApiEngine* e);
+
+    Q_INVOKABLE void dispatch(const QString& action, const QVariantList& args = QVariantList());
 };
 }
 
-#endif // MU_ACTIONS_ACTIONSMODULE_H
+#endif // MU_ACTIONS_DISPATCHERAPI_H

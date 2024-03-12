@@ -19,19 +19,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ACTIONS_ACTIONSMODULE_H
-#define MU_ACTIONS_ACTIONSMODULE_H
+#include "accessibilityapi.h"
 
-#include "modularity/imodulesetup.h"
+using namespace mu::api;
+using namespace mu::accessibility;
 
-namespace mu::actions {
-class ActionsModule : public modularity::IModuleSetup
+AccessibilityApi::AccessibilityApi(IApiEngine* e)
+    : ApiObject(e)
 {
-public:
-    std::string moduleName() const override;
-    void registerExports() override;
-    void registerApi() override;
-};
 }
 
-#endif // MU_ACTIONS_ACTIONSMODULE_H
+QString AccessibilityApi::currentName() const
+{
+    const IAccessible* item = accessibilityController()->lastFocused();
+    return item ? item->accessibleName() : QString();
+}

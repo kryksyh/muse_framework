@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2023 MuseScore BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,19 +19,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ACTIONS_ACTIONSMODULE_H
-#define MU_ACTIONS_ACTIONSMODULE_H
+#include "processapi.h"
 
-#include "modularity/imodulesetup.h"
+using namespace mu::api;
 
-namespace mu::actions {
-class ActionsModule : public modularity::IModuleSetup
+static std::vector<std::string> toArgs(const QStringList& list)
 {
-public:
-    std::string moduleName() const override;
-    void registerExports() override;
-    void registerApi() override;
-};
+    std::vector<std::string> args;
+    for (const QString& a : list) {
+        args.push_back(a.toStdString());
+    }
+    return args;
 }
 
-#endif // MU_ACTIONS_ACTIONSMODULE_H
+ProcessApi::ProcessApi(IApiEngine* e)
+    : ApiObject(e)
+{
+}
+
+int ProcessApi::execute(const QString& program, const QStringList& list)
+{
+    return process()->execute(program.toStdString(), toArgs(list));
+}
+
+bool ProcessApi::startDetached(const QString& program, const QStringList& list)
+{
+    return process()->startDetached(program.toStdString(), toArgs(list));
+}

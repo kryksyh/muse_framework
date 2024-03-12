@@ -19,19 +19,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_ACTIONS_ACTIONSMODULE_H
-#define MU_ACTIONS_ACTIONSMODULE_H
+#include "apiobject.h"
 
-#include "modularity/imodulesetup.h"
+using namespace mu::api;
 
-namespace mu::actions {
-class ActionsModule : public modularity::IModuleSetup
+ApiObject::ApiObject(IApiEngine* e)
+    : m_engine(e)
 {
-public:
-    std::string moduleName() const override;
-    void registerExports() override;
-    void registerApi() override;
-};
 }
 
-#endif // MU_ACTIONS_ACTIONSMODULE_H
+IApiEngine* ApiObject::engine() const
+{
+    return m_engine;
+}
