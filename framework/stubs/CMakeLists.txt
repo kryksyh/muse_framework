@@ -18,78 +18,54 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-if (MUSE_MODULE_ACCESSIBILITY)
+if (NOT MUSE_MODULE_ACCESSIBILITY)
     add_subdirectory(accessibility)
 endif()
 
-add_subdirectory(actions)
-
-if (MUSE_MODULE_AUDIO)
+if (NOT MUSE_MODULE_AUDIO)
     add_subdirectory(audio)
 endif()
 
-if (MUSE_MODULE_AUTOBOT)
-    add_subdirectory(autobot)
-endif()
-
-if (MUSE_MODULE_CLOUD)
+if (NOT MUSE_MODULE_CLOUD)
     add_subdirectory(cloud)
 endif()
 
-add_subdirectory(draw)
-
-if (MUSE_MODULE_MIDI)
-    add_subdirectory(midi)
-endif()
-
-if (MUSE_MODULE_MPE)
-    add_subdirectory(mpe)
-endif()
-
-if (MUSE_MODULE_MUSESAMPLER)
-    add_subdirectory(musesampler)
-endif()
-
-if (MUSE_MODULE_UI)
-    add_subdirectory(ui)
-    add_subdirectory(uicomponents)
-    add_subdirectory(dockwindow)
-endif()
-
-if (MUSE_MODULE_NETWORK)
-    add_subdirectory(network)
-endif()
-
-if (MUSE_MODULE_SHORTCUTS)
-    add_subdirectory(shortcuts)
-endif()
-
-if (MUSE_MODULE_MULTIINSTANCES)
-    add_subdirectory(multiinstances)
-endif()
-
-if (MUSE_MODULE_LANGUAGES)
+if (NOT MUSE_MODULE_LANGUAGES)
     add_subdirectory(languages)
 endif()
 
-if (MUSE_MODULE_LEARN)
+if (NOT MUSE_MODULE_LEARN)
     add_subdirectory(learn)
 endif()
 
-if (MUSE_MODULE_EXTENSIONS)
-    add_subdirectory(extensions)
+if (NOT MUSE_MODULE_MIDI)
+    add_subdirectory(midi)
 endif()
 
-if (MUSE_MODULE_WORKSPACE)
-    add_subdirectory(workspace)
+if (NOT MUSE_MODULE_MPE)
+    add_subdirectory(mpe)
 endif()
 
-if (MUSE_MODULE_VST)
+if (NOT MUSE_MODULE_MULTIINSTANCES)
+    add_subdirectory(multiinstances)
+endif()
+
+if (NOT MUSE_MODULE_NETWORK)
+    add_subdirectory(network)
+endif()
+
+if (NOT MUSE_MODULE_SHORTCUTS)
+    add_subdirectory(shortcuts)
+endif()
+
+if (NOT MUE_BUILD_UPDATE_MODULE)
+    add_subdirectory(update)
+endif()
+
+if (NOT MUSE_MODULE_VST)
     add_subdirectory(vst)
 endif()
 
-# Stubs
-add_subdirectory(stubs)
-
-
-
+if (NOT MUSE_MODULE_WORKSPACE)
+    add_subdirectory(workspace)
+endif()
