@@ -44,7 +44,7 @@ done
 
 echo "=== Get release info ==="
 
-sudo bash ./build/ci/release/get_file_from_s3.sh \
+sudo bash ./buildscripts/ci/release/get_file_from_s3.sh \
             --s3_key "${S3_KEY}" \
             --s3_secret "${S3_SECRET}" \
             --s3_url "${S3_URL}" \
