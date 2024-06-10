@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "extensionsmodel.h"
+#include "extensionslistmodel.h"
 
 #include "translation.h"
 #include "shortcuts/shortcutstypes.h"
@@ -43,6 +43,10 @@ ExtensionsListModel::ExtensionsListModel(QObject* parent)
     m_roles.insert(rCategory, "category");
     m_roles.insert(rVersion, "version");
     m_roles.insert(rShortcuts, "shortcuts");
+
+    provider()->manifestListChanged().onNotify(this, [this]() {
+        load();
+    });
 }
 
 void ExtensionsListModel::load()
@@ -52,6 +56,7 @@ void ExtensionsListModel::load()
     m_plugins = provider()->manifestList();
     if (m_plugins.empty()) {
         LOGE() << "Not found plugins";
+        endResetModel();
         return;
     }
 
