@@ -21,20 +21,17 @@
  */
 #pragma once
 
+#include <memory>
+
 #include "../ifontprovider.h"
 
-#include "global/modularity/ioc.h"
-#include "ifontsdatabase.h"
-#include "ifontsengine.h"
-
 namespace muse::draw {
-class FontProvider : public IFontProvider
+class FontProvider;
+class QFontProvider;
+class FontProviderDispatcher : public IFontProvider
 {
-    Inject<IFontsDatabase> fontsDatabase;
-    Inject<IFontsEngine> fontsEngine;
-
 public:
-    FontProvider() = default;
+    FontProviderDispatcher(std::shared_ptr<FontProvider> mainFProvider, std::shared_ptr<QFontProvider> qtFProvider);
 
     int addSymbolFont(const String& family, const io::path_t& path) override;
 
@@ -60,5 +57,9 @@ public:
     // Score symbols
     RectF symBBox(const Font& f, char32_t ucs4, double DPI_F) const override;
     double symAdvance(const Font& f, char32_t ucs4, double DPI_F) const override;
+
+private:
+    std::shared_ptr<FontProvider> m_mainFProvider;
+    std::shared_ptr<QFontProvider> m_qtFProvider;
 };
 }
