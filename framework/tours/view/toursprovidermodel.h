@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2025 MuseScore BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,21 +19,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MUSE_UI_INTERACTIVEURIREGISTER_H
-#define MUSE_UI_INTERACTIVEURIREGISTER_H
 
-#include "iinteractiveuriregister.h"
+#pragma once
 
-namespace muse::ui {
-class InteractiveUriRegister : public IInteractiveUriRegister
+#include <QObject>
+
+#include "modularity/ioc.h"
+#include "tours/view/toursprovider.h"
+
+namespace muse::tours {
+class ToursProviderModel : public QObject
 {
-public:
-    void registerUri(const Uri& uri, const ContainerMeta& meta) override;
-    ContainerMeta meta(const Uri& uri) const override;
+    Q_OBJECT
 
-private:
-    std::unordered_map<Uri, ContainerMeta> m_uriMap;
+    Q_PROPERTY(muse::tours::ToursProvider * toursProvider READ toursProvider CONSTANT)
+
+    Inject<IToursProvider> provider;
+
+public:
+    explicit ToursProviderModel(QObject* parent = nullptr);
+
+    muse::tours::ToursProvider* toursProvider() const;
 };
 }
-
-#endif // MUSE_UI_INTERACTIVEURIREGISTER_H

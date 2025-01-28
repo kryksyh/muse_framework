@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2025 MuseScore BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,21 +19,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MUSE_UI_INTERACTIVEURIREGISTER_H
-#define MUSE_UI_INTERACTIVEURIREGISTER_H
 
-#include "iinteractiveuriregister.h"
+#pragma once
 
-namespace muse::ui {
-class InteractiveUriRegister : public IInteractiveUriRegister
+#include "types/string.h"
+
+#include "modularity/imoduleinterface.h"
+
+namespace muse::tours {
+class IToursService : MODULE_EXPORT_INTERFACE
 {
-public:
-    void registerUri(const Uri& uri, const ContainerMeta& meta) override;
-    ContainerMeta meta(const Uri& uri) const override;
+    INTERFACE_ID(IToursService)
 
-private:
-    std::unordered_map<Uri, ContainerMeta> m_uriMap;
+public:
+    virtual ~IToursService() = default;
+
+    virtual void onEvent(const String& eventCode) = 0;
 };
 }
-
-#endif // MUSE_UI_INTERACTIVEURIREGISTER_H

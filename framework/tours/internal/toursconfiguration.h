@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2025 MuseScore BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,21 +19,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MUSE_UI_INTERACTIVEURIREGISTER_H
-#define MUSE_UI_INTERACTIVEURIREGISTER_H
 
-#include "iinteractiveuriregister.h"
+#pragma once
 
-namespace muse::ui {
-class InteractiveUriRegister : public IInteractiveUriRegister
+#include "io/path.h"
+
+#include "modularity/ioc.h"
+#include "iglobalconfiguration.h"
+
+#include "tourstypes.h"
+
+#include "itoursconfiguration.h"
+
+namespace muse::tours {
+class ToursConfiguration : public IToursConfiguration, public Injectable
 {
+    Inject<IGlobalConfiguration> globalConfiguration = { this };
+
 public:
-    void registerUri(const Uri& uri, const ContainerMeta& meta) override;
-    ContainerMeta meta(const Uri& uri) const override;
+    ToursConfiguration(const modularity::ContextPtr& iocCtx)
+        : Injectable(iocCtx) {}
+
+    String lastShownTourIdForEvent(const String& eventCode) const override;
+    void setLastShownTourIdForEvent(const String& eventCode, const String& tourId) override;
+
+    io::path_t toursFilePath() const override;
 
 private:
-    std::unordered_map<Uri, ContainerMeta> m_uriMap;
+    StringList lastShownTours() const;
 };
 }
-
-#endif // MUSE_UI_INTERACTIVEURIREGISTER_H
