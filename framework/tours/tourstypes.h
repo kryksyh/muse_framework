@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2025 MuseScore BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,21 +19,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MUSE_UI_INTERACTIVEURIREGISTER_H
-#define MUSE_UI_INTERACTIVEURIREGISTER_H
 
-#include "iinteractiveuriregister.h"
+#pragma once
 
-namespace muse::ui {
-class InteractiveUriRegister : public IInteractiveUriRegister
+#include "types/string.h"
+#include "types/uri.h"
+
+namespace muse::tours {
+struct TourStep
 {
-public:
-    void registerUri(const Uri& uri, const ContainerMeta& meta) override;
-    ContainerMeta meta(const Uri& uri) const override;
+    String title;
+    String description;
+    String videoExplanationUrl;
 
-private:
-    std::unordered_map<Uri, ContainerMeta> m_uriMap;
+    Uri controlUri;
+};
+
+using TourStepList = std::vector<TourStep>;
+
+struct Tour
+{
+    String id;
+    TourStepList steps;
+
+    bool operator==(const Tour& other) const
+    {
+        return id == other.id;
+    }
 };
 }
-
-#endif // MUSE_UI_INTERACTIVEURIREGISTER_H

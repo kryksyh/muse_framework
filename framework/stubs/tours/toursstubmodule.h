@@ -19,21 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MUSE_UI_INTERACTIVEURIREGISTER_H
-#define MUSE_UI_INTERACTIVEURIREGISTER_H
 
-#include "iinteractiveuriregister.h"
+#pragma once
 
-namespace muse::ui {
-class InteractiveUriRegister : public IInteractiveUriRegister
+#include "modularity/imodulesetup.h"
+
+namespace muse::tours {
+class ToursModule : public modularity::IModuleSetup
 {
 public:
-    void registerUri(const Uri& uri, const ContainerMeta& meta) override;
-    ContainerMeta meta(const Uri& uri) const override;
-
-private:
-    std::unordered_map<Uri, ContainerMeta> m_uriMap;
+    std::string moduleName() const override;
+    void registerExports() override;
+    void registerResources() override;
 };
 }
-
-#endif // MUSE_UI_INTERACTIVEURIREGISTER_H
