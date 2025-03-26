@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2024 MuseScore BVBA and others
+ * Copyright (C) 2025 MuseScore BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,27 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "musesoundscheckupdateservicestub.h"
+#pragma once
 
-using namespace muse;
-using namespace muse::update;
+#include "network/inetworkconfiguration.h"
 
-Ret muse::update::MuseSoundsCheckUpdateServiceStub::needCheckForUpdate() const
+namespace muse::network {
+class NetworkConfigurationStub : public INetworkConfiguration
 {
-    return make_ret(Ret::Code::NotSupported);
-}
-
-RetVal<ReleaseInfo> MuseSoundsCheckUpdateServiceStub::checkForUpdate()
-{
-    return make_ret(Ret::Code::NotSupported);
-}
-
-RetVal<ReleaseInfo> MuseSoundsCheckUpdateServiceStub::lastCheckResult()
-{
-    return make_ret(Ret::Code::NotSupported);
-}
-
-Progress MuseSoundsCheckUpdateServiceStub::updateProgress()
-{
-    return Progress();
+public:
+    RequestHeaders defaultHeaders(const std::string& userAgentName = {}) const override;
+};
 }

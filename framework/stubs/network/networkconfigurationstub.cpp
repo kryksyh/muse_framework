@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2024 MuseScore BVBA and others
+ * Copyright (C) 2025 MuseScore BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,22 +19,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MUSE_UPDATE_IMUSESOUNDSCHECKUPDATESCENARIO_H
-#define MUSE_UPDATE_IMUSESOUNDSCHECKUPDATESCENARIO_H
+#include "networkconfigurationstub.h"
 
-#include "modularity/imoduleinterface.h"
+using namespace muse::network;
 
-namespace muse::update {
-class IMuseSoundsCheckUpdateScenario : MODULE_EXPORT_INTERFACE
+RequestHeaders NetworkConfigurationStub::defaultHeaders(const std::string&) const
 {
-    INTERFACE_ID(IMuseSoundsCheckUpdateScenario)
-
-public:
-    virtual ~IMuseSoundsCheckUpdateScenario() = default;
-
-    virtual bool hasUpdate() const = 0;
-    virtual void showUpdate() = 0;
-};
+    return {};
 }
-
-#endif // MUSE_UPDATE_IMUSESOUNDSCHECKUPDATESCENARIO_H
