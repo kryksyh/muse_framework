@@ -19,14 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "toursservicestub.h"
+#pragma once
 
-using namespace muse::tours;
+#include "modularity/imodulesetup.h"
 
-void ToursServiceStub::registerTour(const String&, const Tour&)
+namespace muse::extensions {
+class ExtensionsModule : public modularity::IModuleSetup
 {
-}
-
-void ToursServiceStub::onEvent(const String&)
-{
+public:
+    std::string moduleName() const override;
+    void registerExports() override;
+    void registerResources() override;
+    void registerUiTypes() override;
+};
 }
