@@ -36,12 +36,12 @@ std::thread::id AudioThreadSecurer::mainThreadId() const
     return AudioSanitizer::mainThread();
 }
 
-bool AudioThreadSecurer::isAudioWorkerThread() const
+bool AudioThreadSecurer::isAudioEngineThread() const
 {
     return AudioSanitizer::isEngineThread();
 }
 
-std::thread::id AudioThreadSecurer::workerThreadId() const
+std::thread::id AudioThreadSecurer::audioEngineThreadId() const
 {
     return AudioSanitizer::engineThread();
 }
