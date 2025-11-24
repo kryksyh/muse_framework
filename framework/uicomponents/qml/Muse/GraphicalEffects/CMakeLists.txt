@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-only
-# MuseScore-CLA-applies
+# MuseScore-Studio-CLA-applies
 #
-# MuseScore
+# MuseScore Studio
 # Music Composition & Notation
 #
-# Copyright (C) 2025 MuseScore Limited and others
+# Copyright (C) 2025 MuseScore Limited
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
@@ -18,13 +18,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-muse_create_qml_module(muse_learn_qml ALIAS muse::learn_qml FOR muse_learn STUB)
+muse_create_qml_module(muse_uicomponents_graphicaleffects_qml ALIAS muse::uicomponents_graphicaleffects_qml FOR muse_uicomponents)
 
-qt_add_qml_module(muse_learn_qml
-    URI Muse.Learn
+qt_add_qml_module(muse_uicomponents_graphicaleffects_qml
+    URI Muse.GraphicalEffects
     VERSION 1.0
     QML_FILES
-        LearnPage.qml
-    DEPENDENCIES
-        TARGET muse_uicomponents_qml
+        EffectDropShadow.qml
+        EffectRectangularGlow.qml
+        EffectFastBlur.qml
+        EffectColorOverlay.qml
+        RoundedCornersEffect.qml
+)
+
+qt_add_shaders(muse_uicomponents_graphicaleffects_qml muse_uicomponents_graphicaleffects_qml_shaders
+    PREFIX
+        "/qt/qml/Muse/GraphicalEffects"
+    FILES
+        "shaders/roundcorners.frag"
 )

@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2025 MuseScore Limited and others
+ * Copyright (C) 2021 MuseScore Limited and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -20,13 +20,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import QtQuick
+ #pragma once
 
-ShaderEffect {
-    id: root
-    
-    required property real radius
-    property size sourceSize: Qt.size(root.width, root.height)
+#include "qqmlintegration.h"
 
-    fragmentShader: "qrc:/qt/qml/Muse/GraphicalEffects/shaders/roundcorners.frag.qsb"
+#include <QItemSelectionModel>
+
+namespace muse::uicomponents {
+class ItemMultiSelectionModel : public QItemSelectionModel
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+public:
+    explicit ItemMultiSelectionModel(QAbstractItemModel* parent = nullptr);
+
+    void setAllowedModifiers(Qt::KeyboardModifiers modifiers);
+    void setSingleItemSelectionMode(bool on);
+
+    QList<int> selectedRows() const;
+
+    using QItemSelectionModel::select;
+
+public slots:
+    Q_INVOKABLE void select(const QModelIndex& index);
+
+private:
+    Qt::KeyboardModifiers m_allowedModifiers;
+};
 }

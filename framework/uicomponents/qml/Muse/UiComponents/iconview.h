@@ -22,15 +22,41 @@
 
 #pragma once
 
-#include "modularity/imodulesetup.h"
+#include <qqmlintegration.h>
+
+#include <QIcon>
+#include <QColor>
+
+#include "view/quickpaintedview.h"
 
 namespace muse::uicomponents {
-class UiComponentsModule : public modularity::IModuleSetup
+class IconView : public QuickPaintedView
 {
-public:
-    std::string moduleName() const override;
+    Q_OBJECT
+    QML_ELEMENT;
 
-    void resolveImports() override;
-    void registerUiTypes() override;
+    Q_PROPERTY(QVariant icon READ icon WRITE setIcon NOTIFY iconChanged)
+    Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
+
+public:
+    IconView(QQuickItem* parent = nullptr);
+
+    QVariant icon() const;
+    QColor backgroundColor() const;
+
+public slots:
+    void setIcon(QVariant val);
+    void setBackgroundColor(const QColor& color);
+
+signals:
+    void iconChanged(const QVariant& icon);
+    void backgroundColorChanged(const QColor& color);
+
+private:
+    void paint(QPainter*) override;
+
+    QColor m_color;
+    QColor m_backgroundColor;
+    QIcon m_icon;
 };
 }

@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2025 MuseScore Limited and others
+ * Copyright (C) 2021 MuseScore Limited and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,14 +19,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#pragma once
 
-import QtQuick
+#include <qqmlintegration.h>
 
-ShaderEffect {
-    id: root
-    
-    required property real radius
-    property size sourceSize: Qt.size(root.width, root.height)
+#include "popupview.h"
 
-    fragmentShader: "qrc:/qt/qml/Muse/GraphicalEffects/shaders/roundcorners.frag.qsb"
+class QQuickCloseEvent;
+
+namespace muse::uicomponents {
+class DropdownView : public PopupView
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+    Q_PROPERTY(int focusItemY READ focusItemY WRITE setFocusItemY NOTIFY focusItemYChanged)
+
+public:
+    explicit DropdownView(QQuickItem* parent = nullptr);
+    ~DropdownView() override = default;
+
+    int focusItemY() const;
+    void setFocusItemY(int newFocusItemY);
+
+signals:
+    void focusItemYChanged();
+
+private:
+    void updateGeometry() override;
+
+    int m_focusItemY = -1;
+};
 }
