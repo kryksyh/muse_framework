@@ -26,6 +26,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/midistubmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/midiconfigurationstub.cpp
     ${CMAKE_CURRENT_LIST_DIR}/midiconfigurationstub.h
+    ${CMAKE_CURRENT_LIST_DIR}/midiinportstub.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/midiinportstub.h
+    ${CMAKE_CURRENT_LIST_DIR}/midioutportstub.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/midioutportstub.h
     )
 
 set(MODULE_IS_STUB ON)
