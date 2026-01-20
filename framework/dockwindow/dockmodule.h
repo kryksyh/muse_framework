@@ -35,6 +35,9 @@ public:
     void registerExports() override;
     void onInit(const IApplication::RunMode& mode) override;
 
+    // Session
+    void registerSessionExports(const muse::modularity::ContextPtr& ctx) override;
+
 private:
     std::shared_ptr<DockWindowActionsController> m_actionsController;
 };
