@@ -1,0 +1,182 @@
+name: pr_dispatch
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  pull-requests: write
+  statuses: write
+  contents: read
+
+concurrency:
+  group: pr-dispatch-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+env:
+  CLIENT_WORKFLOW: pr_build_against_framework.yml
+
+jobs:
+  parse:
+    if: >-
+      github.event.issue.pull_request != null
+      && startsWith(github.event.comment.body, '/build')
+      && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+    runs-on: ubuntu-latest
+    outputs:
+      head_sha: ${{ steps.pr.outputs.head_sha }}
+      au_owner: ${{ steps.cfg.outputs.au_owner }}
+      au_repo: ${{ steps.cfg.outputs.au_repo }}
+      au_branch: ${{ steps.cfg.outputs.au_branch }}
+      au_platforms: ${{ steps.cfg.outputs.au_platforms }}
+      dispatch_id: ${{ steps.cfg.outputs.dispatch_id }}
+      pr_num: ${{ github.event.issue.number }}
+    steps:
+      - name: React with eyes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api -X POST \
+            "repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions" \
+            -f content=eyes
+      - name: Fetch PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pr_json=$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.issue.number }}")
+          head_sha=$(echo "$pr_json" | jq -r .head.sha)
+          echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
+          echo "$pr_json" | jq -r .body > /tmp/pr_body.txt
+      - name: Parse build configuration
+        id: cfg
+        run: |
+          extract() {
+            grep -m1 -E "^${1}:[[:space:]]*" /tmp/pr_body.txt | sed -E "s/^${1}:[[:space:]]*//" || true
+          }
+          au_combo=$(extract "audacity")
+          au_platforms=$(extract "audacity platforms")
+          [ -z "$au_combo" ] && au_combo="audacity/audacity/master"
+          [ -z "$au_platforms" ] && au_platforms="linux_x64 macos windows_x64"
+          # Split owner/repo/branch — branch may contain '/', so take fields 3-end.
+          au_owner=$(echo "$au_combo" | cut -d/ -f1)
+          au_repo=$(echo "$au_combo" | cut -d/ -f2)
+          au_branch=$(echo "$au_combo" | cut -d/ -f3-)
+          if [ -z "$au_owner" ] || [ -z "$au_repo" ] || [ -z "$au_branch" ]; then
+            echo "::error::audacity field must be {owner}/{repo}/{branch}, got '$au_combo'" >&2
+            exit 1
+          fi
+          dispatch_id=$(uuidgen)
+          {
+            echo "au_owner=$au_owner"
+            echo "au_repo=$au_repo"
+            echo "au_branch=$au_branch"
+            echo "au_platforms=$au_platforms"
+            echo "dispatch_id=$dispatch_id"
+          } >> "$GITHUB_OUTPUT"
+
+  kick_au:
+    needs: parse
+    runs-on: ubuntu-latest
+    outputs:
+      run_id: ${{ steps.find.outputs.run_id }}
+      run_url: ${{ steps.find.outputs.run_url }}
+    steps:
+      - name: Dispatch Audacity build
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_DISPATCH_TOKEN }}
+        run: |
+          gh workflow run "${{ env.CLIENT_WORKFLOW }}" \
+            --repo "${{ needs.parse.outputs.au_owner }}/${{ needs.parse.outputs.au_repo }}" \
+            --ref master \
+            -f framework_repo="${{ github.repository }}" \
+            -f framework_ref="${{ needs.parse.outputs.head_sha }}" \
+            -f app_ref="${{ needs.parse.outputs.au_branch }}" \
+            -f platforms="${{ needs.parse.outputs.au_platforms }}" \
+            -f framework_pr="${{ needs.parse.outputs.pr_num }}" \
+            -f dispatch_id="${{ needs.parse.outputs.dispatch_id }}-au"
+      - name: Locate dispatched run
+        id: find
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_DISPATCH_TOKEN }}
+        run: |
+          needle="${{ needs.parse.outputs.dispatch_id }}-au"
+          for i in $(seq 1 60); do
+            run=$(gh api "repos/${{ needs.parse.outputs.au_owner }}/${{ needs.parse.outputs.au_repo }}/actions/workflows/${{ env.CLIENT_WORKFLOW }}/runs?event=workflow_dispatch&per_page=20" \
+              | jq -r --arg n "$needle" '.workflow_runs[] | select(.name | contains($n)) | "\(.id) \(.html_url)"' \
+              | head -n1)
+            if [ -n "$run" ]; then
+              echo "run_id=$(echo $run | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+              echo "run_url=$(echo $run | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Timed out waiting for dispatched run on ${{ needs.parse.outputs.au_owner }}/${{ needs.parse.outputs.au_repo }}" >&2
+          exit 1
+      - name: Set pending commit status
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api -X POST \
+            "repos/${{ github.repository }}/statuses/${{ needs.parse.outputs.head_sha }}" \
+            -f state=pending \
+            -f context="cross-build / Audacity" \
+            -f target_url="${{ steps.find.outputs.run_url }}" \
+            -f description="Audacity build dispatched"
+
+  comment:
+    needs: [parse, kick_au]
+    if: always() && needs.kick_au.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post summary comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo "Dispatched Audacity build for framework PR #${{ needs.parse.outputs.pr_num }}:"
+            echo ""
+            echo "- **Audacity** (\`${{ needs.parse.outputs.au_owner }}/${{ needs.parse.outputs.au_repo }}@${{ needs.parse.outputs.au_branch }}\`, \`${{ needs.parse.outputs.au_platforms }}\`): ${{ needs.kick_au.outputs.run_url }}"
+          } > /tmp/comment.md
+          gh pr comment "${{ needs.parse.outputs.pr_num }}" \
+            --repo "${{ github.repository }}" \
+            --body-file /tmp/comment.md
+
+  wait_au:
+    needs: [parse, kick_au]
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Wait for Audacity run
+        env:
+          GH_TOKEN: ${{ secrets.CROSS_REPO_DISPATCH_TOKEN }}
+        run: |
+          run_id="${{ needs.kick_au.outputs.run_id }}"
+          while :; do
+            row=$(gh api "repos/${{ needs.parse.outputs.au_owner }}/${{ needs.parse.outputs.au_repo }}/actions/runs/$run_id" \
+              | jq -r '"\(.status) \(.conclusion // "")"')
+            status=$(echo "$row" | awk '{print $1}')
+            conclusion=$(echo "$row" | awk '{print $2}')
+            if [ "$status" = "completed" ]; then
+              echo "conclusion=$conclusion" >> "$GITHUB_ENV"
+              break
+            fi
+            sleep 30
+          done
+      - name: Forward status to framework PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          case "$conclusion" in
+            success) state=success ;;
+            cancelled|skipped) state=error ;;
+            *) state=failure ;;
+          esac
+          gh api -X POST \
+            "repos/${{ github.repository }}/statuses/${{ needs.parse.outputs.head_sha }}" \
+            -f state="$state" \
+            -f context="cross-build / Audacity" \
+            -f target_url="${{ needs.kick_au.outputs.run_url }}" \
+            -f description="Audacity build $conclusion"
+          [ "$state" = "success" ] || exit 1
