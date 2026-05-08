@@ -69,11 +69,11 @@ jobs:
           au_combo=$(extract "audacity")
           au_platforms=$(extract "audacity platforms")
           [ -z "$au_platforms" ] && au_platforms="linux_x64 macos windows_x64"
-          read -r au_owner au_repo au_branch < <(parse_combo "audacity" "$au_combo" "kryksyh/audacity/master")
+          read -r au_owner au_repo au_branch < <(parse_combo "audacity" "$au_combo" "audacity/audacity/master")
           mu_combo=$(extract "musescore")
           mu_platforms=$(extract "musescore platforms")
           [ -z "$mu_platforms" ] && mu_platforms="linux_x64 macos windows_x64"
-          read -r mu_owner mu_repo mu_branch < <(parse_combo "musescore" "$mu_combo" "kryksyh/MuseScore/master")
+          read -r mu_owner mu_repo mu_branch < <(parse_combo "musescore" "$mu_combo" "musescore/MuseScore/master")
           {
             echo "au_owner=$au_owner"
             echo "au_repo=$au_repo"
@@ -108,7 +108,7 @@ jobs:
   build_au_linux:
     needs: parse
     if: contains(needs.parse.outputs.au_platforms, 'linux_x64')
-    uses: kryksyh/audacity/.github/workflows/au4_build_linux.yml@master
+    uses: audacity/audacity/.github/workflows/au4_build_linux.yml@master
     with:
       app_repo: ${{ needs.parse.outputs.au_owner }}/${{ needs.parse.outputs.au_repo }}
       app_ref: ${{ needs.parse.outputs.au_branch }}
@@ -118,7 +118,7 @@ jobs:
   build_au_macos:
     needs: parse
     if: contains(needs.parse.outputs.au_platforms, 'macos')
-    uses: kryksyh/audacity/.github/workflows/au4_build_macos.yml@master
+    uses: audacity/audacity/.github/workflows/au4_build_macos.yml@master
     with:
       app_repo: ${{ needs.parse.outputs.au_owner }}/${{ needs.parse.outputs.au_repo }}
       app_ref: ${{ needs.parse.outputs.au_branch }}
@@ -128,7 +128,7 @@ jobs:
   build_au_windows:
     needs: parse
     if: contains(needs.parse.outputs.au_platforms, 'windows_x64')
-    uses: kryksyh/audacity/.github/workflows/au4_build_windows.yml@master
+    uses: audacity/audacity/.github/workflows/au4_build_windows.yml@master
     with:
       app_repo: ${{ needs.parse.outputs.au_owner }}/${{ needs.parse.outputs.au_repo }}
       app_ref: ${{ needs.parse.outputs.au_branch }}
@@ -138,7 +138,7 @@ jobs:
   build_mu_linux:
     needs: parse
     if: contains(needs.parse.outputs.mu_platforms, 'linux_x64') || contains(needs.parse.outputs.mu_platforms, 'linux_arm64')
-    uses: kryksyh/MuseScore/.github/workflows/build_linux.yml@master
+    uses: musescore/MuseScore/.github/workflows/build_linux.yml@master
     with:
       app_repo: ${{ needs.parse.outputs.mu_owner }}/${{ needs.parse.outputs.mu_repo }}
       app_ref: ${{ needs.parse.outputs.mu_branch }}
@@ -150,7 +150,7 @@ jobs:
   build_mu_macos:
     needs: parse
     if: contains(needs.parse.outputs.mu_platforms, 'macos')
-    uses: kryksyh/MuseScore/.github/workflows/build_macos.yml@master
+    uses: musescore/MuseScore/.github/workflows/build_macos.yml@master
     with:
       app_repo: ${{ needs.parse.outputs.mu_owner }}/${{ needs.parse.outputs.mu_repo }}
       app_ref: ${{ needs.parse.outputs.mu_branch }}
@@ -161,7 +161,7 @@ jobs:
   build_mu_windows:
     needs: parse
     if: contains(needs.parse.outputs.mu_platforms, 'windows_x64') || contains(needs.parse.outputs.mu_platforms, 'windows_portable')
-    uses: kryksyh/MuseScore/.github/workflows/build_windows.yml@master
+    uses: musescore/MuseScore/.github/workflows/build_windows.yml@master
     with:
       app_repo: ${{ needs.parse.outputs.mu_owner }}/${{ needs.parse.outputs.mu_repo }}
       app_ref: ${{ needs.parse.outputs.mu_branch }}
