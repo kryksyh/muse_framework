@@ -25,7 +25,7 @@
 
 namespace muse::audioplugins {
 enum class Err {
-    Undefined       = int(Ret::Code::Undefined),
+       Undefined       = int(Ret::Code::Undefined),
     NoError         = int(Ret::Code::Ok),
     UnknownError    = int(Ret::Code::AudioFirst),
 
