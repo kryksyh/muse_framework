@@ -43,6 +43,10 @@
 
 using namespace muse;
 
+#ifdef AU4_APP_TITLE_VERSION
+#error "Audacity will break"
+#endif
+
 String BaseApplication::appName()
 {
 #ifdef MUSE_APP_NAME_MACHINE_READABLE
