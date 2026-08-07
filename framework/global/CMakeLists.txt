@@ -21,8 +21,11 @@
 muse_create_module(muse_global ALIAS muse::global)
 
 include(thirdparty/kors_logger/logger.cmake)
-include(thirdparty/kors_profiler/profiler/profiler.cmake)
 include(thirdparty/kors_modularity/modularity/modularity.cmake)
+
+if (MUSE_MODULE_GLOBAL_PROFILER)
+    include(thirdparty/kors_profiler/profiler/profiler.cmake)
+endif()
 
 add_subdirectory(async)
 

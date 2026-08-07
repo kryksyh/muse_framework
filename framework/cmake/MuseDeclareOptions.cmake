@@ -64,6 +64,7 @@ declare_muse_module_opt(EXTENSIONS ON)
 declare_muse_module_opt(GLOBAL ON)
 option(MUSE_MODULE_GLOBAL_LOGGER_DEBUGLEVEL "Enable logging debug level" ON)
 option(MUSE_MODULE_GLOBAL_MULTI_IOC "Enable multi ioc (multi windows)" OFF)
+option(MUSE_MODULE_GLOBAL_PROFILER "Enable the internal runtime profiler" ON)
 
 declare_muse_module_opt(INTERACTIVE ON)
 option(MUSE_MODULE_INTERACTIVE_SYNC_SUPPORTED "Sync interactive supported" ON)

@@ -28,7 +28,9 @@
 
 #include "logger.h"
 #include "logremover.h"
+#ifdef MUSE_MODULE_GLOBAL_PROFILER
 #include "profiler.h"
+#endif
 
 #include "internal/baseapplication.h"
 #include "internal/cryptographichash.h"
@@ -190,6 +192,7 @@ void GlobalModule::onPreInit(const IApplication::RunMode& mode)
                << ", build: " << application->build() << " ===";
     }
 
+#ifdef MUSE_MODULE_GLOBAL_PROFILER
     //! --- Setup profiler ---
     using namespace muse::profiler;
     struct MyPrinter : public Profiler::Printer
@@ -208,6 +211,7 @@ void GlobalModule::onPreInit(const IApplication::RunMode& mode)
 
     Profiler* profiler = Profiler::instance();
     profiler->setup(profOpt, new MyPrinter());
+#endif
 
     //! --- Setup Ticker ---
     m_tickerProvider->start();

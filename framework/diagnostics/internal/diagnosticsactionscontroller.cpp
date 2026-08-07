@@ -21,6 +21,8 @@
  */
 #include "diagnosticsactionscontroller.h"
 
+#include "muse_framework_config.h"
+
 #include "types/uri.h"
 
 #include "qml/Muse/Diagnostics/diagnosticaccessiblemodel.h"
@@ -34,7 +36,9 @@ using namespace muse::actions;
 
 static const muse::UriQuery SYSTEM_PATHS_URI("muse://diagnostics/system/paths?modal=false&floating=true");
 static const muse::UriQuery GRAPHICSINFO_URI("muse://diagnostics/system/graphicsinfo?modal=false&floating=true");
+#ifdef MUSE_MODULE_GLOBAL_PROFILER
 static const muse::UriQuery PROFILER_URI("muse://diagnostics/system/profiler?modal=false&floating=true");
+#endif
 static const muse::UriQuery NAVIGATION_TREE_URI("muse://diagnostics/navigation/tree?modal=false&floating=true");
 static const muse::UriQuery ACCESSIBLE_TREE_URI("muse://diagnostics/accessible/tree?modal=false&floating=true");
 static const muse::UriQuery ENGRAVING_ELEMENTS_URI("musescore://diagnostics/engraving/elements?modal=false&floating=true");
@@ -47,7 +51,9 @@ void DiagnosticsActionsController::init()
 {
     dispatcher()->reg(this, "diagnostic-show-paths", [this]() { openUri(SYSTEM_PATHS_URI); });
     dispatcher()->reg(this, "diagnostic-show-graphicsinfo", [this]() { openUri(GRAPHICSINFO_URI); });
+#ifdef MUSE_MODULE_GLOBAL_PROFILER
     dispatcher()->reg(this, "diagnostic-show-profiler", [this]() { openUri(PROFILER_URI); });
+#endif
     dispatcher()->reg(this, "diagnostic-show-navigation-tree", [this]() { openUri(NAVIGATION_TREE_URI); });
     dispatcher()->reg(this, "diagnostic-show-accessible-tree", [this]() { openUri(ACCESSIBLE_TREE_URI); });
     dispatcher()->reg(this, "diagnostic-accessible-tree-dump", []() { DiagnosticAccessibleModel().dumpTree(); });

@@ -37,6 +37,11 @@ set(MUSE_APP_BUILD_MODE "dev" CACHE STRING "Build mode")
 
 include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseDeclareOptions.cmake)
 
+if (MUSE_APP_BUILD_MODE STREQUAL "release")
+    set(MUSE_MODULE_GLOBAL_PROFILER OFF)
+    set(MUSE_MODULE_TESTFLOW OFF)
+endif()
+
 ###########################################
 # Setup Configure
 ###########################################
@@ -53,7 +58,9 @@ set(MUSE_MODULE_MULTIWINDOWS_SINGLEPROC_MODE ON)
 set(MUSE_APP_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 set(MUSE_APP_INSTALL_RESOURCES_LOCATION ".")
 
-add_compile_definitions(KORS_PROFILER_ENABLED)
+if (MUSE_MODULE_GLOBAL_PROFILER)
+    add_compile_definitions(KORS_PROFILER_ENABLED)
+endif()
 
 include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseSetupConfiguration.cmake)
 

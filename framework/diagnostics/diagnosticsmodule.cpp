@@ -64,7 +64,9 @@ void DiagnosticsModule::resolveImports()
     if (ir) {
         ir->registerQmlUri(Uri("muse://diagnostics/system/paths"), "Muse.Diagnostics", "DiagnosticPathsDialog");
         ir->registerQmlUri(Uri("muse://diagnostics/system/graphicsinfo"), "Muse.Diagnostics", "DiagnosticGraphicsInfoDialog");
+#ifdef MUSE_MODULE_GLOBAL_PROFILER
         ir->registerQmlUri(Uri("muse://diagnostics/system/profiler"), "Muse.Diagnostics", "DiagnosticProfilerDialog");
+#endif
         ir->registerQmlUri(Uri("muse://diagnostics/navigation/tree"), "Muse.Diagnostics", "DiagnosticNavigationDialog");
         ir->registerQmlUri(Uri("muse://diagnostics/accessible/tree"), "Muse.Diagnostics", "DiagnosticAccessibleDialog");
         ir->registerQmlUri(Uri("muse://diagnostics/actions/list"), "Muse.Diagnostics", "DiagnosticActionsDialog");

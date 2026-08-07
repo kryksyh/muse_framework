@@ -1,5 +1,18 @@
 muse_create_qml_module(muse_diagnostics_qml ALIAS muse::diagnostics_qml FOR muse_diagnostics)
 
+set(_profiler_sources)
+set(_profiler_qml_files)
+if (MUSE_MODULE_GLOBAL_PROFILER)
+    list(APPEND _profiler_sources
+        system/profilerviewmodel.cpp
+        system/profilerviewmodel.h
+    )
+    list(APPEND _profiler_qml_files
+        DiagnosticProfilerDialog.qml
+        DiagnosticProfilerPanel.qml
+    )
+endif()
+
 qt_add_qml_module(muse_diagnostics_qml
     URI Muse.Diagnostics
     VERSION 1.0
@@ -24,8 +37,7 @@ qt_add_qml_module(muse_diagnostics_qml
         keynav/keynavdevsubsection.h
         system/graphicsinfomodel.cpp
         system/graphicsinfomodel.h
-        system/profilerviewmodel.cpp
-        system/profilerviewmodel.h
+        ${_profiler_sources}
     QML_FILES
         DiagnosticAccessibleDialog.qml
         DiagnosticAccessiblePanel.qml
@@ -37,8 +49,7 @@ qt_add_qml_module(muse_diagnostics_qml
         DiagnosticNavigationPanel.qml
         DiagnosticPathsDialog.qml
         DiagnosticPathsPanel.qml
-        DiagnosticProfilerDialog.qml
-        DiagnosticProfilerPanel.qml
+        ${_profiler_qml_files}
     IMPORTS
         TARGET muse_ui_qml
         TARGET muse_uicomponents_qml

@@ -21,6 +21,8 @@
  */
 #include "diagnosticsactions.h"
 
+#include "muse_framework_config.h"
+
 #include "ui/uiaction.h"
 #include "shortcuts/shortcutcontext.h"
 #include "types/translatablestring.h"
@@ -42,12 +44,14 @@ const UiActionList DiagnosticsActions::m_actions = {
              TranslatableString("action", "Show p&aths…"),
              TranslatableString("action", "Show paths")
              ),
+#ifdef MUSE_MODULE_GLOBAL_PROFILER
     UiAction("diagnostic-show-profiler",
              muse::ui::UiCtxAny,
              muse::shortcuts::CTX_DISABLED,
              TranslatableString("action", "Show pr&ofiler…"),
              TranslatableString("action", "Show profiler")
              ),
+#endif
     UiAction("diagnostic-show-graphicsinfo",
              muse::ui::UiCtxAny,
              muse::shortcuts::CTX_DISABLED,
