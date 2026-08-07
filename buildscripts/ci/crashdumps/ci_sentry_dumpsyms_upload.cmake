@@ -2,8 +2,7 @@
 
 set(HERE ${CMAKE_CURRENT_LIST_DIR})
 
-set(ARTIFACTS_DIR "build.artifacts")
-set(SYMBOLS_PATH "${ARTIFACTS_DIR}/symbols")
+set(SYMBOLS_PATH "${CMAKE_SOURCE_DIR}/build.symbols")
 
 set(SENTRY_URL "" CACHE STRING "Sentry URL")
 set(SENTRY_AUTH_TOKEN "" CACHE STRING "Sentry Auth Token")

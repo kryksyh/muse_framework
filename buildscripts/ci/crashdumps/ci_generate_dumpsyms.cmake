@@ -3,8 +3,7 @@ message(STATUS "Generate dump symbols")
 set(HERE ${CMAKE_CURRENT_LIST_DIR})
 
 set(GEN_SCRIPT "${HERE}/generate_syms.cmake")
-set(ARTIFACTS_DIR "${CMAKE_SOURCE_DIR}/build.artifacts")
-set(SYMBOLS_DIR ${ARTIFACTS_DIR}/symbols)
+set(SYMBOLS_DIR "${CMAKE_SOURCE_DIR}/build.symbols")
 
 # Options
 set(APP_BIN "" CACHE STRING "Path to app binary")
