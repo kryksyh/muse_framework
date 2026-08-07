@@ -30,8 +30,6 @@ set(qt_components
     Qml
     Quick
     QuickControls2
-    QuickWidgets
-    Xml
     Svg
     ShaderTools
 
@@ -46,8 +44,6 @@ set(QT_LIBRARIES
     Qt::Qml
     Qt::Quick
     Qt::QuickControls2
-    Qt::QuickWidgets
-    Qt::Xml
     Qt::Svg
 
     Qt::Core5Compat
@@ -58,8 +54,6 @@ if(NOT OS_IS_WASM)
     list(APPEND qt_components NetworkAuth)
     list(APPEND QT_LIBRARIES Qt::NetworkAuth)
 
-    list(APPEND qt_components PrintSupport)
-    list(APPEND QT_LIBRARIES Qt::PrintSupport)
 endif()
 
 if(OS_IS_LIN)
